@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<title>PCSC Health Screening Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+const EJS_SVC='service_nly098h',EJS_TPL='template_uqxbczm',EJS_KEY='onSQovxWUcNViSevO';
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --nv:#1A3A6B;--tl:#1D9E75;--ltl:#E6F7F2;--dtl:#0D6B50;
+  --am:#D97706;--lam:#FFFBEB;--dam:#92400E;
+  --pu:#7C3AED;--lpu:#F5F3FF;--dpu:#4C1D95;
+  --cr:#C0392B;--lcr:#FFF0EE;--dcr:#7F1D1D;
+  --bl:#1D4ED8;--lbl:#EFF6FF;--dbl:#1E3A8A;
+  --br:#B45309;--lbr:#FFFBEB;--dbr:#78350F;
+  --sl:#475569;--lsl:#F8FAFC;--dsl:#1E293B;
+  --gn:#059669;--lgn:#ECFDF5;--dgn:#064E3B;
+  --rose:#9D174D;--lrose:#FDF2F8;--drose:#831843;
+  --g1:#F8FAFC;--g2:#F1F5F9;--g4:#94A3B8;--g6:#475569;--g8:#1E293B;
+}
+html{font-size:16px}
+body{font-family:'DM Sans',system-ui,sans-serif;background:#EEF2F7;min-height:100vh;-webkit-font-smoothing:antialiased}
+.app{max-width:480px;margin:0 auto;background:#fff;min-height:100vh;position:relative}
+.sc{display:none;flex-direction:column;min-height:100vh}
+.sc.on{display:flex}
+
+/* Back bar */
+.back-bar{display:flex;align-items:center;gap:8px;padding:10px 16px 0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.back-bar span{font-size:13px;font-weight:600;color:var(--g4)}
+.back-bar:hover span{color:var(--g8)}
+
+/* Screen header */
+.shdr{padding:22px 20px 20px;color:#fff;flex-shrink:0}
+.shdr .eye{font-size:10px;opacity:.72;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px}
+.shdr .ht{font-size:21px;font-weight:800;line-height:1.25}
+.shdr .hsb{font-size:13px;opacity:.82;margin-top:5px;line-height:1.5}
+.shdr.nv{background:var(--nv)}.shdr.tl{background:var(--tl)}
+.shdr.am{background:var(--am)}.shdr.pu{background:var(--pu)}
+.shdr.cr{background:var(--cr)}.shdr.bl{background:var(--bl)}
+.shdr.br{background:var(--br)}.shdr.sl{background:var(--sl)}
+.shdr.gn{background:var(--gn)}
+.shdr.rose{background:var(--rose)}
+.btn.rose{background:var(--rose);color:#fff}
+.tip.rose{background:var(--lrose);color:var(--drose)}
+
+/* Body */
+.bd{padding:16px 20px;flex:1;overflow-y:auto}
+
+/* Nav bar */
+.nbar{padding:12px 20px 24px;flex-shrink:0}
+
+/* Buttons */
+.btn{display:block;width:100%;padding:14px 18px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;text-align:center;font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent;transition:opacity .15s,transform .1s}
+.btn:active{transform:scale(.97)}
+.btn+.btn{margin-top:9px}
+.btn.nv{background:var(--nv);color:#fff}.btn.tl{background:var(--tl);color:#fff}
+.btn.am{background:var(--am);color:#fff}.btn.pu{background:var(--pu);color:#fff}
+.btn.cr{background:var(--cr);color:#fff}.btn.bl{background:var(--bl);color:#fff}
+.btn.br{background:var(--br);color:#fff}.btn.gn{background:var(--gn);color:#fff}
+.btn.gh{background:var(--g2);color:var(--g6)}
+
+/* Cards */
+.tip{border-radius:12px;padding:14px 16px;margin-bottom:14px;line-height:1.65;font-size:13px}
+.tip.tl{background:var(--ltl);color:var(--dtl)}.tip.am{background:var(--lam);border:1.5px solid var(--am);color:var(--dam)}
+.tip.cr{background:var(--lcr);border:1.5px solid var(--cr);color:var(--dcr)}.tip.gy{background:var(--g2);color:var(--g6)}
+.tip.pu{background:var(--lpu);color:var(--dpu)}.tip.bl{background:var(--lbl);color:var(--dbl)}
+.tip.gn{background:var(--lgn);color:var(--dgn)}.tip.br{background:var(--lbr);color:var(--dbr)}
+.tipt{font-weight:800;font-size:14px;margin-bottom:5px}
+.disc{font-size:11px;color:var(--g4);line-height:1.5;margin-bottom:14px;text-align:center}
+
+/* Option cards (yes/no, single select) */
+.opt-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.opt{border:2px solid var(--g2);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .12s,background .12s;-webkit-tap-highlight-color:transparent;background:#fff}
+.opt:active{transform:scale(.98)}
+.opt.sel{border-color:currentColor;background:#f0fdf9}
+.opt-circle{width:22px;height:22px;border-radius:50%;border:2px solid #CBD5E1;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .12s,border-color .12s}
+.opt.sel .opt-circle{background:var(--ac,#1D9E75);border-color:var(--ac,#1D9E75)}
+.opt.sel .opt-circle::after{content:'';width:8px;height:8px;border-radius:50%;background:#fff}
+.opt-text{font-size:14px;font-weight:500;color:var(--g8)}
+.opt-sub{font-size:12px;color:var(--g4);margin-top:2px;line-height:1.4}
+
+/* Checkbox cards */
+.chk-card{border:2px solid var(--g2);border-radius:12px;padding:12px 14px;display:flex;align-items:flex-start;gap:12px;cursor:pointer;transition:border-color .12s,background .12s;margin-bottom:8px;background:#fff;-webkit-tap-highlight-color:transparent}
+.chk-card.sel{border-color:var(--ac,#1D9E75);background:var(--ltl)}
+.chk-box{width:22px;height:22px;border-radius:6px;border:2px solid #CBD5E1;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:background .12s}
+.chk-card.sel .chk-box{background:var(--ac,#1D9E75);border-color:var(--ac,#1D9E75)}
+.chk-card.sel .chk-box::after{content:'✓';font-size:12px;font-weight:800;color:#fff}
+.chk-text{font-size:14px;font-weight:500;color:var(--g8);line-height:1.4}
+.chk-sub{font-size:12px;color:var(--g4);margin-top:3px;line-height:1.4}
+
+/* Scale questions (PHQ / GAD) */
+.scale-q{margin-bottom:16px;padding:14px;background:var(--g1);border-radius:12px}
+.scale-q-text{font-size:13px;font-weight:600;color:var(--g8);margin-bottom:10px;line-height:1.4}
+.scale-opts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.scale-opt{border:1.5px solid var(--g2);border-radius:8px;padding:8px 4px;text-align:center;cursor:pointer;font-size:11px;font-weight:500;color:var(--g6);transition:background .12s,border-color .12s;-webkit-tap-highlight-color:transparent;line-height:1.3}
+.scale-opt.sel{background:var(--pu);border-color:var(--pu);color:#fff;font-weight:700}
+
+/* BMI display */
+.bmi-display{text-align:center;padding:20px;background:var(--g1);border-radius:14px;margin:12px 0}
+.bmi-num{font-size:48px;font-weight:800;color:var(--nv);line-height:1}
+.bmi-label{font-size:14px;font-weight:600;margin-top:4px}
+.bmi-sub{font-size:12px;color:var(--g4);margin-top:3px}
+
+/* Height/weight inputs */
+.hw-row{display:flex;gap:10px;margin-bottom:12px}
+.hw-group{flex:1}
+.hw-label{font-size:12px;font-weight:600;color:var(--g6);margin-bottom:5px;display:block}
+.hw-inp{width:100%;padding:12px;border:2px solid #E2E8F0;border-radius:10px;font-size:16px;font-family:inherit;color:var(--g8);background:#fff;text-align:center;outline:none}
+.hw-inp:focus{border-color:var(--am)}
+select.hw-inp{cursor:pointer}
+
+/* Form fields */
+.fg{margin-bottom:14px}
+.fl{font-size:13px;font-weight:700;color:var(--g6);margin-bottom:6px;display:block}
+.fi{width:100%;padding:12px 14px;border:2px solid #E2E8F0;border-radius:10px;font-size:15px;font-family:inherit;color:var(--g8);outline:none;background:#fff}
+.fi:focus{border-color:var(--tl)}
+.fh{font-size:12px;color:var(--g4);margin-top:4px;line-height:1.4}
+
+/* Clinic card */
+.cc{background:var(--g2);border-radius:14px;padding:16px;margin-bottom:14px}
+.cn{font-size:15px;font-weight:800;color:var(--nv);margin-bottom:10px}
+.cp{font-size:20px;font-weight:800;color:var(--tl);margin:5px 0 3px}
+.cd{font-size:13px;color:var(--g6);margin-bottom:4px;line-height:1.4}
+
+/* Progress */
+.prog-bar{display:flex;gap:4px;margin-bottom:12px;padding:0 20px}
+.pseg{height:5px;flex:1;border-radius:3px;background:#E2E8F0;transition:background .2s}
+.pseg.done{background:var(--tl)}.pseg.cur{background:var(--nv)}
+.prog-lbl{font-size:11px;color:var(--g4);padding:0 20px;margin-bottom:2px}
+
+/* Hub tiles */
+.hub-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px}
+.tile{border:2px solid var(--g2);border-radius:16px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer;transition:border-color .12s,transform .1s,box-shadow .12s;background:#fff;-webkit-tap-highlight-color:transparent}
+.tile:active{transform:scale(.96)}
+.tile:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.tile-em{font-size:42px;line-height:1;margin-bottom:10px}
+.tile-name{font-size:13px;font-weight:800;color:var(--g8);margin-bottom:4px;line-height:1.3}
+.tile-tag{font-size:11px;color:var(--g4);line-height:1.4}
+
+/* Score ring */
+.score-ring{display:flex;align-items:center;gap:16px;background:var(--g1);border-radius:14px;padding:16px;margin-bottom:16px}
+.ring-num{font-size:42px;font-weight:800;color:var(--nv);line-height:1;min-width:60px;text-align:center}
+.ring-info b{font-size:14px;font-weight:700;color:var(--g8);display:block;margin-bottom:3px}
+.ring-info span{font-size:12px;color:var(--g6)}
+
+/* Trio info boxes */
+.trio{display:flex;gap:8px;margin:14px 0}
+.tri-item{flex:1;background:var(--g1);border-radius:12px;padding:12px 8px;text-align:center}
+.tri-item .te{font-size:24px;display:block;margin-bottom:5px}
+.tri-item .tl2{font-size:11px;font-weight:700;color:var(--g8)}
+
+/* Lupus category styles */
+.cat-hdr-inner{padding:16px 20px 12px}
+.cat-icon{font-size:36px;margin-bottom:6px;line-height:1}
+.cat-q{font-size:16px;font-weight:800;color:var(--g8);line-height:1.3}
+.cat-sub{font-size:12px;color:var(--g6);margin-top:4px}
+.sym-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px}
+.scard{border:2px solid var(--g2);border-radius:14px;padding:14px 10px 12px;display:flex;flex-direction:column;align-items:center;cursor:pointer;position:relative;background:#fff;transition:border-color .12s,background .12s;-webkit-tap-highlight-color:transparent}
+.scard:active{transform:scale(.96)}
+.scard.sel{border-color:#1D9E75;background:var(--ltl)}
+.scard .ckb{display:none;position:absolute;top:7px;right:7px;width:20px;height:20px;background:#1D9E75;color:#fff;border-radius:50%;font-size:11px;font-weight:700;text-align:center;line-height:20px}
+.scard.sel .ckb{display:block}
+.scard .si{font-size:38px;line-height:1;margin-bottom:8px}
+.scard .sn{font-size:12px;font-weight:700;color:var(--g8);text-align:center;line-height:1.3}
+.scard .sd{font-size:11px;color:var(--g4);text-align:center;margin-top:3px;line-height:1.35}
+.sel-cnt{font-size:12px;color:var(--g6);text-align:center;margin-bottom:8px;min-height:16px}
+.stky-nav{padding:10px 20px 20px;border-top:1px solid var(--g2);background:#fff}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px}
+</style>
+</head>
+<body>
+<script>
+// Dynamic date/time on hub
+document.addEventListener('DOMContentLoaded', function(){
+  function updateClock(){
+    const el = document.getElementById('hub-datetime');
+    if(!el) return;
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    const timeStr = now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    el.textContent = dateStr + ' · ' + timeStr;
+  }
+  updateClock();
+  setInterval(updateClock, 30000); // refresh every 30 seconds
+});
+</script>
+<div class="app">
+
+<!-- ═══════════════════════════════════════════════════════ HUB -->
+<div class="sc on" id="hub">
+  <div class="shdr nv" style="text-align:center;padding:20px 20px 18px;background:#000">
+    <img src="data:image/png;base64,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" alt="PCSC Logo" style="width:76px;height:76px;border-radius:12px;display:block;margin:0 auto 12px;object-fit:cover"/>
+    <div id="hub-datetime" style="font-size:11px;opacity:.7;letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px"></div>
+    <div style="font-family:'DM Serif Display',serif;font-size:24px;line-height:1.2;margin-bottom:6px">PCSC Health Screening Station</div>
+    <div style="font-size:13px;opacity:.8">Free screenings · Completely confidential · Tap a card to begin</div>
+  </div>
+  <div class="hub-grid">
+    <div class="tile" onclick="go('glp-w')">
+      <div class="tile-em">💊</div>
+      <div class="tile-name">Weight Loss Medications</div>
+      <div class="tile-tag">Do you qualify for Ozempic, Wegovy, or Mounjaro?</div>
+    </div>
+    <div class="tile" onclick="go('dia-w')">
+      <div class="tile-em">🩸</div>
+      <div class="tile-name">Diabetes Risk Check</div>
+      <div class="tile-tag">Find out your risk for Type 2 Diabetes</div>
+    </div>
+    <div class="tile" onclick="go('sleep-w')">
+      <div class="tile-em">😴</div>
+      <div class="tile-name">Sleep Apnea Screening</div>
+      <div class="tile-tag">Could you have undiagnosed sleep apnea?</div>
+    </div>
+    <div class="tile" onclick="go('ment-w')">
+      <div class="tile-em">🧠</div>
+      <div class="tile-name">Mental Wellness Check</div>
+      <div class="tile-tag">How have you really been feeling?</div>
+    </div>
+    <div class="tile" onclick="go('lup-w')">
+      <div class="tile-em">🦋</div>
+      <div class="tile-name">Lupus & Autoimmune</div>
+      <div class="tile-tag">Check your symptoms with our rheumatologist</div>
+    </div>
+    <div class="tile" onclick="go('bone-w')">
+      <div class="tile-em">🦴</div>
+      <div class="tile-name">Bone Health</div>
+      <div class="tile-tag">Are your bones at risk for fractures?</div>
+    </div>
+    <div class="tile" onclick="go('pal-w')">
+      <div class="tile-em">🕊️</div>
+      <div class="tile-name">Palliative Care</div>
+      <div class="tile-tag">Living better with a serious illness</div>
+    </div>
+    <div class="tile" onclick="go('wnd-w')">
+      <div class="tile-em">🩹</div>
+      <div class="tile-name">Wound Care</div>
+      <div class="tile-tag">Is a wound not healing properly?</div>
+    </div>
+    <div class="tile" style="grid-column:1/-1;max-width:200px;margin:0 auto;width:100%" onclick="go('prep-w')">
+      <div class="tile-em">🛡️</div>
+      <div class="tile-name" style="color:var(--rose)">HIV Prevention (PrEP)</div>
+      <div class="tile-tag">Do you qualify for PrEP pills or injections?</div>
+    </div>
+  </div>
+  <div style="padding:0 16px 24px;text-align:center">
+    <div style="font-size:11px;color:var(--g4);line-height:1.6">These screenings are for informational purposes only and do not provide a medical diagnosis. All information is kept private. Powered by <strong>Platinum Continuity & Specialty Clinic</strong>.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ GLP-1 -->
+<div class="sc" id="glp-w">
+  <div class="back-bar" onclick="backToHub()"><span>← Main Menu</span></div>
+  <div class="shdr am">
+    <div class="eye">Endocrinology · Weight Management</div>
+    <div class="ht" style="font-size:22px">💊 Weight Loss Medication Check</div>
+    <div class="hsb">Find out if medications like Ozempic, Wegovy, or Mounjaro may be right for you — and whether your insurance will cover it.</div>
+  </div>
+  <div class="bd">
+    <div class="tip am"><div class="tipt">How do these medications work?</div>GLP-1 medications (like Ozempic, Wegovy, Mounjaro, and Zepbound) help reduce appetite, stabilize blood sugar, and support significant weight loss. Many insurance plans cover them — but eligibility depends on your health profile.</div>
+    <div class="trio">
+      <div class="tri-item"><span class="te">⏱️</span><span class="tl2">~2 min</span></div>
+      <div class="tri-item"><span class="te">🔒</span><span class="tl2">Private</span></div>
+      <div class="tri-item"><span class="te">💚</span><span class="tl2">Free</span></div>
+    </div>
+  </div>
+  <div class="nbar"><button class="btn am" onclick="go('glp-bmi')">Let's Check Your Eligibility →</button></div>
+</div>
+
+<div class="sc" id="glp-bmi">
+  <div class="back-bar" onclick="go('glp-w')"><span>← Back</span></div>
+  <div class="shdr am"><div class="eye">Step 1 of 4</div><div class="ht" style="font-size:18px">📏 Your Height & Weight</div><div class="hsb">This helps us calculate your BMI — a key part of medication eligibility.</div></div>
+  <div class="bd">
+    <div class="hw-row">
+      <div class="hw-group"><label class="hw-label">Height — Feet</label><select class="hw-inp" id="ht-ft" onchange="calcBMI()"><option value="">ft</option><option>4</option><option>5</option><option>6</option><option>7</option></select></div>
+      <div class="hw-group"><label class="hw-label">Inches</label><select class="hw-inp" id="ht-in" onchange="calcBMI()"><option value="">in</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option></select></div>
+    </div>
+    <label class="hw-label">Weight (pounds)</label>
+    <input class="hw-inp" id="wt-lbs" type="number" placeholder="e.g. 185" min="80" max="600" oninput="calcBMI()" style="text-align:left;margin-bottom:12px"/>
+    <div class="bmi-display" id="bmi-display" style="display:none">
+      <div class="bmi-num" id="bmi-val"></div>
+      <div class="bmi-label" id="bmi-cat"></div>
+      <div class="bmi-sub">Body Mass Index (BMI)</div>
+    </div>
+    <div class="disc" style="margin-top:8px">BMI is one of several factors used to determine medication eligibility. Your information is private and never shared.</div>
+  </div>
+  <div class="nbar"><button class="btn am" onclick="glpNext1()">Next →</button></div>
+</div>
+
+<div class="sc" id="glp-t2d">
+  <div class="back-bar" onclick="go('glp-bmi')"><span>← Back</span></div>
+  <div class="shdr am"><div class="eye">Step 2 of 4</div><div class="ht" style="font-size:18px">🩸 Diabetes Diagnosis</div><div class="hsb">This opens up additional medication options.</div></div>
+  <div class="bd">
+    <div style="font-size:15px;font-weight:700;color:var(--g8);margin-bottom:14px">Have you been diagnosed with Type 2 Diabetes?</div>
+    <div class="opt-grid" id="t2d-opts" style="--ac:var(--am)">
+      <div class="opt" onclick="selectOpt('t2d','yes',this)"><div class="opt-circle"></div><div><div class="opt-text">✅ Yes, I have Type 2 Diabetes</div></div></div>
+      <div class="opt" onclick="selectOpt('t2d','no',this)"><div class="opt-circle"></div><div><div class="opt-text">No, I have not been diagnosed</div></div></div>
+      <div class="opt" onclick="selectOpt('t2d','unsure',this)"><div class="opt-circle"></div><div><div class="opt-text">Not sure / haven't been tested</div></div></div>
+    </div>
+  </div>
+  <div class="nbar"><button class="btn am" onclick="glpNext2()">Next →</button></div>
+</div>
+
+<div class="sc" id="glp-cond">
+  <div class="back-bar" onclick="go('glp-t2d')"><span>← Back</span></div>
+  <div class="shdr am"><div class="eye">Step 3 of 4</div><div class="ht" style="font-size:18px">🏥 Related Health Conditions</div><div class="hsb">Select all that apply — these can affect eligibility.</div></div>
+  <div class="bd">
+    <div id="cond-cards">
+      <div class="chk-card" id="cc-hbp" onclick="toggleChk('cc-hbp','cond-hbp')" style="--ac:var(--am)"><div class="chk-box" id="cond-hbp"></div><div><div class="chk-text">💓 High blood pressure</div><div class="chk-sub">Hypertension — even if on medication</div></div></div>
+      <div class="chk-card" id="cc-chol" onclick="toggleChk('cc-chol','cond-chol')" style="--ac:var(--am)"><div class="chk-box" id="cond-chol"></div><div><div class="chk-text">🧪 High cholesterol or high triglycerides</div></div></div>
+      <div class="chk-card" id="cc-sleep" onclick="toggleChk('cc-sleep','cond-sleep')" style="--ac:var(--am)"><div class="chk-box" id="cond-sleep"></div><div><div class="chk-text">😴 Sleep apnea</div></div></div>
+      <div class="chk-card" id="cc-heart" onclick="toggleChk('cc-heart','cond-heart')" style="--ac:var(--am)"><div class="chk-box" id="cond-heart"></div><div><div class="chk-text">❤️ Heart disease or prior heart attack / stroke</div></div></div>
+      <div class="chk-card" id="cc-liver" onclick="toggleChk('cc-liver','cond-liver')" style="--ac:var(--am)"><div class="chk-box" id="cond-liver"></div><div><div class="chk-text">🫀 Fatty liver disease</div></div></div>
+      <div class="chk-card" id="cc-ckd" onclick="toggleChk('cc-ckd','cond-ckd')" style="--ac:var(--am)"><div class="chk-box" id="cond-ckd"></div><div><div class="chk-text">🫘 Chronic Kidney Disease (CKD)</div><div class="chk-sub">Diagnosed with reduced kidney function or kidney damage</div></div></div>
+      <div class="chk-card" id="cc-none" onclick="toggleChk('cc-none','cond-none')" style="--ac:var(--am)"><div class="chk-box" id="cond-none"></div><div><div class="chk-text">None of these apply</div></div></div>
+    </div>
+  </div>
+  <div class="nbar"><button class="btn am" onclick="go('glp-ins')">Next →</button></div>
+</div>
+
+<div class="sc" id="glp-ins">
+  <div class="back-bar" onclick="go('glp-cond')"><span>← Back</span></div>
+  <div class="shdr am"><div class="eye">Step 4 of 4</div><div class="ht" style="font-size:18px">🏥 Your Insurance</div><div class="hsb">This helps us explain what's likely covered and what isn't.</div></div>
+  <div class="bd">
+    <div style="font-size:14px;font-weight:700;color:var(--g8);margin-bottom:12px">What type of insurance do you have?</div>
+    <div class="opt-grid" id="ins-opts" style="--ac:var(--am)">
+      <div class="opt" onclick="selectOpt('ins','medicare',this)"><div class="opt-circle"></div><div><div class="opt-text">Medicare</div></div></div>
+      <div class="opt" onclick="selectOpt('ins','medicaid',this)"><div class="opt-circle"></div><div><div class="opt-text">Nevada Medicaid / CHIP</div><div class="opt-sub">Molina, Anthem, Nevada Total Care, SilverSummit, HPN Medicaid</div></div></div>
+      <div class="opt" onclick="selectOpt('ins','commercial',this)"><div class="opt-circle"></div><div><div class="opt-text">Employer or work insurance</div><div class="opt-sub">BCBS, Aetna, Cigna, UHC, Humana, HPN, etc.</div></div></div>
+      <div class="opt" onclick="selectOpt('ins','optum',this)"><div class="opt-circle"></div><div><div class="opt-text">Optum Health</div></div></div>
+      <div class="opt" onclick="selectOpt('ins','intermountain',this)"><div class="opt-circle"></div><div><div class="opt-text">Intermountain Health</div></div></div>
+      <div class="opt" onclick="selectOpt('ins','culinary',this)"><div class="opt-circle"></div><div><div class="opt-text">Culinary / Nevada Coalition</div></div></div>
+      <div class="opt" onclick="selectOpt('ins','va',this)"><div class="opt-circle"></div><div><div class="opt-text">VA / Veterans Benefits</div><div class="opt-sub">Accepted with prior authorization — our team handles this</div></div></div>
+      <div class="opt" onclick="selectOpt('ins','none',this)"><div class="opt-circle"></div><div><div class="opt-text">No insurance / I pay out of pocket</div></div></div>
+      <div class="opt" onclick="selectOpt('ins','other',this)"><div class="opt-circle"></div><div><div class="opt-text">Other / Not sure</div></div></div>
+    </div>
+  </div>
+  <div class="nbar"><button class="btn am" onclick="showGlpResult()">See My Results →</button></div>
+</div>
+
+<div class="sc" id="glp-res">
+  <div class="back-bar" onclick="backToHub()"><span>← Main Menu</span></div>
+  <div class="shdr am"><div class="eye">Your Results</div><div class="ht" id="glp-res-ht" style="font-size:22px"></div></div>
+  <div class="bd" id="glp-res-body"></div>
+  <div class="nbar" id="glp-res-nav"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ DIABETES (ADA) -->
+<div class="sc" id="dia-w">
+  <div class="back-bar" onclick="backToHub()"><span>← Main Menu</span></div>
+  <div class="shdr cr"><div class="eye">Endocrinology · Diabetes</div><div class="ht">🩸 Diabetes Risk Check</div><div class="hsb">Based on the American Diabetes Association's Type 2 Diabetes Risk Test. Takes about 1 minute.</div></div>
+  <div class="bd">
+    <div class="tip cr"><div class="tipt">Why does this matter?</div>1 in 3 adults in the U.S. has prediabetes — and most don't know it. Catching it early can prevent or delay Type 2 Diabetes with simple changes.</div>
+    <div class="trio">
+      <div class="tri-item"><span class="te">⏱️</span><span class="tl2">1 min</span></div>
+      <div class="tri-item"><span class="te">🔬</span><span class="tl2">ADA Validated</span></div>
+      <div class="tri-item"><span class="te">🔒</span><span class="tl2">Private</span></div>
+    </div>
+    <div style="font-size:10px;color:var(--g4);text-align:center;line-height:1.5">Adapted from the American Diabetes Association Type 2 Diabetes Risk Test.<br/>© American Diabetes Association · diabetes.org/diabetes-risk-test</div>
+  </div>
+  <div class="nbar"><button class="btn cr" onclick="go('dia-q')">Start Risk Check →</button></div>
+</div>
+
+<div class="sc" id="dia-q">
+  <div class="back-bar" onclick="go('dia-w')"><span>← Back</span></div>
+  <div class="shdr cr"><div class="eye">Diabetes Risk Check</div><div class="ht" style="font-size:18px">Answer 6 quick questions</div></div>
+  <div class="bd">
+    <div style="font-size:13px;color:var(--g4);margin-bottom:16px">Source: American Diabetes Association · diabetes.org</div>
+
+    <div style="font-size:14px;font-weight:700;color:var(--g8);margin-bottom:8px">1. How old are you?</div>
+    <div class="opt-grid" id="dia-age" style="--ac:var(--cr)">
+      <div class="opt" onclick="selectOpt('dia-age','0',this)"><div class="opt-circle"></div><div class="opt-text">Under 40</div></div>
+      <div class="opt" onclick="selectOpt('dia-age','1',this)"><div class="opt-circle"></div><div class="opt-text">40–49 years old</div></div>
+      <div class="opt" onclick="selectOpt('dia-age','2',this)"><div class="opt-circle"></div><div class="opt-text">50–59 years old</div></div>
+      <div class="opt" onclick="selectOpt('dia-age','3',this)"><div class="opt-circle"></div><div class="opt-text">60 or older</div></div>
+    </div>
+
+    <div style="font-size:14px;font-weight:700;color:var(--g8);margin:14px 0 8px">2. Has a parent, brother, or sister been diagnosed with diabetes?</div>
+    <div class="opt-grid" id="dia-fam" style="--ac:var(--cr)">
+      <div class="opt" onclick="selectOpt('dia-fam','1',this)"><div class="opt-circle"></div><div class="opt-text">Yes</div></div>
+      <div class="opt" onclick="selectOpt('dia-fam','0',this)"><div class="opt-circle"></div><div class="opt-text">No</div></div>
+    </div>
+
+    <div style="font-size:14px;font-weight:700;color:var(--g8);margin:14px 0 8px">3. Have you ever been told you have high blood pressure?</div>
+    <div class="opt-grid" id="dia-hbp" style="--ac:var(--cr)">
+      <div class="opt" onclick="selectOpt('dia-hbp','1',this)"><div class="opt-circle"></div><div class="opt-text">Yes</div></div>
+      <div class="opt" onclick="selectOpt('dia-hbp','0',this)"><div class="opt-circle"></div><div class="opt-text">No</div></div>
+    </div>
+
+    <div style="font-size:14px;font-weight:700;color:var(--g8);margin:14px 0 8px">4. Are you physically active most days of the week?</div>
+    <div class="opt-grid" id="dia-act" style="--ac:var(--cr)">
+      <div class="opt" onclick="selectOpt('dia-act','0',this)"><div class="opt-circle"></div><div class="opt-text">Yes — I exercise or walk regularly</div></div>
+      <div class="opt" onclick="selectOpt('dia-act','1',this)"><div class="opt-circle"></div><div class="opt-text">No — mostly sitting/inactive</div></div>
+    </div>
+
+    <div style="font-size:14px;font-weight:700;color:var(--g8);margin:14px 0 8px">5. What is your height and weight?</div>
+    <div style="background:var(--g1);border-radius:12px;padding:14px;margin-bottom:6px">
+      <div class="hw-row">
+        <div class="hw-group"><label class="hw-label">Height — Feet</label><select class="hw-inp" id="dia-ht-ft" onchange="calcDiaBMI()" style="border-color:#E2E8F0"><option value="">ft</option><option>4</option><option>5</option><option>6</option><option>7</option></select></div>
+        <div class="hw-group"><label class="hw-label">Inches</label><select class="hw-inp" id="dia-ht-in" onchange="calcDiaBMI()" style="border-color:#E2E8F0"><option value="">in</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option></select></div>
+      </div>
+      <label class="hw-label">Weight (pounds)</label>
+      <input class="hw-inp" id="dia-wt-lbs" type="number" placeholder="e.g. 175" min="80" max="600" oninput="calcDiaBMI()" style="text-align:left;border-color:#E2E8F0"/>
+      <div class="bmi-display" id="dia-bmi-display" style="display:none;margin-top:12px;margin-bottom:0">
+        <div class="bmi-num" id="dia-bmi-val"></div>
+        <div class="bmi-label" id="dia-bmi-cat"></div>
+        <div class="bmi-sub">Your BMI — auto-calculated</div>
+      </div>
+    </div>
+
+    <div style="font-size:14px;font-weight:700;color:var(--g8);margin:14px 0 8px">6. (Women only) Have you ever had gestational diabetes during pregnancy?</div>
+    <div class="opt-grid" id="dia-gest" style="--ac:var(--cr)">
+      <div class="opt" onclick="selectOpt('dia-gest','1',this)"><div class="opt-circle"></div><div class="opt-text">Yes</div></div>
+      <div class="opt" onclick="selectOpt('dia-gest','0',this)"><div class="opt-circle"></div><div class="opt-text">No</div></div>
+      <div class="opt" onclick="selectOpt('dia-gest','0',this)"><div class="opt-circle"></div><div class="opt-text">Not applicable (male / N/A)</div></div>
+    </div>
+  </div>
+  <div class="nbar"><button class="btn cr" onclick="showDiaResult()">See My Results →</button></div>
+</div>
+
+<div class="sc" id="dia-res">
+  <div class="back-bar" onclick="backToHub()"><span>← Main Menu</span></div>
+  <div class="shdr cr"><div class="eye">Diabetes Risk Check Results</div><div class="ht" id="dia-res-ht"></div></div>
+  <div class="bd" id="dia-res-body"></div>
+  <div class="nbar" id="dia-res-nav"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ SLEEP APNEA -->
+<div class="sc" id="sleep-w">
+  <div class="back-bar" onclick="backToHub()"><span>← Main Menu</span></div>
+  <div class="shdr bl"><div class="eye">Pulmonology · Sleep Medicine</div><div class="ht">😴 Sleep Apnea Screening</div><div class="hsb">Sleep apnea affects 1 in 4 adults and most don't know they have it. This quick check uses a clinically validated screening tool.</div></div>
+  <div class="bd">
+    <div class="tip bl"><div class="tipt">Signs you might have sleep apnea</div>Loud snoring, gasping for air, waking up exhausted, or being told you stop breathing during sleep are all warning signs. Untreated sleep apnea raises your risk for heart disease, diabetes, and stroke.</div>
+  </div>
+  <div class="nbar"><button class="btn bl" onclick="go('sleep-q')">Start Screening →</button></div>
+</div>
+
+<div class="sc" id="sleep-q">
+  <div class="back-bar" onclick="go('sleep-w')"><span>← Back</span></div>
+  <div class="shdr bl"><div class="eye">Sleep Apnea Screening · STOP-BANG Tool</div><div class="ht" style="font-size:18px">Answer yes or no to each question</div></div>
+  <div class="bd" id="sleep-qs"></div>
+  <div class="nbar"><button class="btn bl" onclick="showSleepResult()">See My Results →</button></div>
+</div>
+
+<div class="sc" id="sleep-res">
+  <div class="back-bar" onclick="backToHub()"><span>← Main Menu</span></div>
+  <div class="shdr bl"><div class="eye">Sleep Apnea Results</div><div class="ht" id="sleep-res-ht"></div></div>
+  <div class="bd" id="sleep-res-body"></div>
+  <div class="nbar" id="sleep-res-nav"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ MENTAL WELLNESS -->
+<div class="sc" id="ment-w">
+  <div class="back-bar" onclick="backToHub()"><span>← Main Menu</span></div>
+  <div class="shdr pu"><div class="eye">Behavioral Health · Psychiatry</div><div class="ht">🧠 Mental Wellness Check</div><div class="hsb">A confidential check-in on how you've really been feeling. No judgment — just care.</div></div>
+  <div class="bd">
+    <div class="tip pu"><div class="tipt">You're not alone</div>Millions of people experience depression or anxiety — often without realizing it. This check uses the same trusted tools your doctor uses. Everything stays completely private.</div>
+    <div class="trio">
+      <div class="tri-item"><span class="te">🔒</span><span class="tl2">Completely Private</span></div>
+      <div class="tri-item"><span class="te">💜</span><span class="tl2">No Judgment</span></div>
+      <div class="tri-item"><span class="te">⏱️</span><span class="tl2">~3 min</span></div>
+    </div>
+  </div>
+  <div class="nbar"><button class="btn pu" onclick="go('ment-phq')">Begin →</button></div>
+</div>
+
+<div class="sc" id="ment-phq">
+  <div class="back-bar" onclick="go('ment-w')"><span>← Back</span></div>
+  <div class="shdr pu"><div class="eye">Part 1 of 2 — Mood Check (PHQ-9)</div><div class="ht" style="font-size:17px">Over the past 2 weeks, how often have you been bothered by any of the following?</div></div>
+  <div class="bd" id="phq9-qs"></div>
+  <div class="nbar"><button class="btn pu" onclick="go('ment-gad')">Next: Worry Check →</button></div>
+</div>
+
+<div class="sc" id="ment-gad">
+  <div class="back-bar" onclick="go('ment-phq')"><span>← Back</span></div>
+  <div class="shdr pu"><div class="eye">Part 2 of 2 — Worry & Anxiety Check (GAD-7)</div><div class="ht" style="font-size:17px">Over the past 2 weeks, how often have you been bothered by these?</div></div>
+  <div class="bd" id="gad7-qs"></div>
+  <div class="nbar"><button class="btn pu" onclick="showMentalResult()">See My Results →</button></div>
+</div>
+
+<div class="sc" id="ment-res">
+  <div class="back-bar" onclick="backToHub()"><span>← Main Menu</span></div>
+  <div class="shdr pu"><div class="eye">Mental Wellness Results</div><div class="ht" id="ment-res-ht"></div></div>
+  <div class="bd" id="ment-res-body"></div>
+  <div class="nbar" id="ment-res-nav"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ LUPUS -->
+<div class="sc" id="lup-w">
+  <div class="back-bar" onclick="backToHub()"><span>← Main Menu</span></div>
+  <div class="shdr tl"><div class="eye">PCSC Rheumatology</div><div class="ht">🦋 Lupus & Autoimmune Check</div><div class="hsb">Lupus is often called "the great imitator" — its symptoms are easy to miss. This visual check covers the most common signs.</div></div>
+  <div class="bd">
+    <div class="tip tl"><div class="tipt">Who should do this screening?</div>Anyone experiencing recurring joint pain, unusual rashes, extreme fatigue, or unexplained health problems that come and go. Early detection leads to much better outcomes.</div>
+  </div>
+  <div class="nbar"><button class="btn tl" onclick="startLupus()">Start Screening →</button></div>
+</div>
+
+<div class="sc" id="lup-cat">
+  <div class="back-bar" onclick="lupusBack()"><span id="lup-back-lbl">← Back</span></div>
+  <div id="lup-prog-lbl" class="prog-lbl"></div>
+  <div class="prog-bar" id="lup-prog"></div>
+  <div class="cat-hdr-inner" id="lup-chdr" style="background:#E6F7F2"></div>
+  <div class="sym-grid" id="lup-grid"></div>
+  <div class="stky-nav">
+    <div class="sel-cnt" id="lup-cnt"></div>
+    <button class="btn tl" id="lup-next-btn" onclick="lupusNext()">Next →</button>
+    <button class="btn gh" onclick="lupusNext()" style="margin-top:8px;font-size:13px;padding:11px">None of these apply to me</button>
+  </div>
+</div>
+
+<div class="sc" id="lup-res">
+  <div class="back-bar" onclick="backToHub()"><span>← Main Menu</span></div>
+  <div class="shdr tl"><div class="eye">Lupus Screening Results</div><div class="ht" id="lup-res-ht"></div></div>
+  <div class="bd" id="lup-res-body"></div>
+  <div class="nbar" id="lup-res-nav"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ BONE HEALTH -->
+<div class="sc" id="bone-w">
+  <div class="back-bar" onclick="backToHub()"><span>← Main Menu</span></div>
+  <div class="shdr br"><div class="eye">Endocrinology · Bone Health</div><div class="ht">🦴 Bone Health & Osteoporosis Check</div><div class="hsb">Osteoporosis causes bones to become weak and break easily — often with no warning signs until a fracture happens.</div></div>
+  <div class="bd">
+    <div class="tip br"><div class="tipt">Did you know?</div>50% of women and 25% of men over age 50 will break a bone due to osteoporosis. Most people don't know their bones are weak until it's too late. This check takes 1 minute.</div>
+  </div>
+  <div class="nbar"><button class="btn br" onclick="go('bone-q')">Check My Bone Health →</button></div>
+</div>
+
+<div class="sc" id="bone-q">
+  <div class="back-bar" onclick="go('bone-w')"><span>← Back</span></div>
+  <div class="shdr br"><div class="eye">Bone Health Check</div><div class="ht" style="font-size:18px">Answer these questions about your bone health</div></div>
+  <div class="bd">
+    <div style="font-size:14px;font-weight:700;color:var(--g8);margin-bottom:8px">1. How old are you?</div>
+    <div class="opt-grid" id="bone-age" style="--ac:var(--br)">
+      <div class="opt" onclick="selectOpt('bone-age','0',this)"><div class="opt-circle"></div><div class="opt-text">Under 50</div></div>
+      <div class="opt" onclick="selectOpt('bone-age','1',this)"><div class="opt-circle"></div><div class="opt-text">50–59</div></div>
+      <div class="opt" onclick="selectOpt('bone-age','2',this)"><div class="opt-circle"></div><div class="opt-text">60–69</div></div>
+      <div class="opt" onclick="selectOpt('bone-age','3',this)"><div class="opt-circle"></div><div class="opt-text">70 or older</div></div>
+    </div>
+    <div style="font-size:14px;font-weight:700;color:var(--g8);margin:14px 0 8px">2. What is your biological sex?</div>
+    <div class="opt-grid" id="bone-sex" style="--ac:var(--br)">
+      <div class="opt" onclick="selectOpt('bone-sex','1',this)"><div class="opt-circle"></div><div class="opt-text">Female</div></div>
+      <div class="opt" onclick="selectOpt('bone-sex','0',this)"><div class="opt-circle"></div><div class="opt-text">Male</div></div>
+    </div>
+    <div style="font-size:14px;font-weight:700;color:var(--g8);margin:14px 0 6px">3. Check any that apply to you:</div>
+    <div class="chk-card" id="bc-fx" onclick="toggleChk('bc-fx','bx-fx')" style="--ac:var(--br)"><div class="chk-box" id="bx-fx"></div><div><div class="chk-text">🦴 You've broken a bone easily (minor fall or no injury)</div></div></div>
+    <div class="chk-card" id="bc-par" onclick="toggleChk('bc-par','bx-par')" style="--ac:var(--br)"><div class="chk-box" id="bx-par"></div><div><div class="chk-text">👪 A parent has broken their hip</div></div></div>
+    <div class="chk-card" id="bc-smk" onclick="toggleChk('bc-smk','bx-smk')" style="--ac:var(--br)"><div class="chk-box" id="bx-smk"></div><div><div class="chk-text">🚬 You currently smoke cigarettes</div></div></div>
+    <div class="chk-card" id="bc-alc" onclick="toggleChk('bc-alc','bx-alc')" style="--ac:var(--br)"><div class="chk-box" id="bx-alc"></div><div><div class="chk-text">🍷 You drink 3 or more alcoholic drinks per day</div></div></div>
+    <div class="chk-card" id="bc-ster" onclick="toggleChk('bc-ster','bx-ster')" style="--ac:var(--br)"><div class="chk-box" id="bx-ster"></div><div><div class="chk-text">💊 You've taken steroid medications (prednisone, etc.) for more than 3 months</div></div></div>
+    <div class="chk-card" id="bc-ra" onclick="toggleChk('bc-ra','bx-ra')" style="--ac:var(--br)"><div class="chk-box" id="bx-ra"></div><div><div class="chk-text">🤲 You have rheumatoid arthritis</div></div></div>
+    <div class="chk-card" id="bc-thin" onclick="toggleChk('bc-thin','bx-thin')" style="--ac:var(--br)"><div class="chk-box" id="bx-thin"></div><div><div class="chk-text">⚖️ You are underweight or very thin</div></div></div>
+  </div>
+  <div class="nbar"><button class="btn br" onclick="showBoneResult()">See My Results →</button></div>
+</div>
+
+<div class="sc" id="bone-res">
+  <div class="back-bar" onclick="backToHub()"><span>← Main Menu</span></div>
+  <div class="shdr br"><div class="eye">Bone Health Results</div><div class="ht" id="bone-res-ht"></div></div>
+  <div class="bd" id="bone-res-body"></div>
+  <div class="nbar" id="bone-res-nav"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ PALLIATIVE -->
+<div class="sc" id="pal-w">
+  <div class="back-bar" onclick="backToHub()"><span>← Main Menu</span></div>
+  <div class="shdr sl"><div class="eye">Palliative & Supportive Care</div><div class="ht">🕊️ Is Palliative Care Right for You?</div><div class="hsb">Palliative care is not just for end of life. It's about living as fully as possible — at any stage of a serious illness.</div></div>
+  <div class="bd">
+    <div class="tip gy"><div class="tipt">Common misconception: Palliative care ≠ Hospice</div>Palliative care can be received alongside any treatment — surgery, chemotherapy, dialysis, or other therapies. It focuses on comfort, quality of life, and support for you and your family.</div>
+  </div>
+  <div class="nbar"><button class="btn" style="background:var(--sl);color:#fff" onclick="go('pal-q')">Learn If It May Help →</button></div>
+</div>
+
+<div class="sc" id="pal-q">
+  <div class="back-bar" onclick="go('pal-w')"><span>← Back</span></div>
+  <div class="shdr sl"><div class="eye">Palliative Care · Awareness Check</div><div class="ht" style="font-size:17px">Do any of these apply to you or a loved one?</div></div>
+  <div class="bd">
+    <div style="font-size:13px;color:var(--g4);margin-bottom:14px">Tap all that apply. This is not a medical test — it's a guide to help you understand if palliative care services might be helpful.</div>
+    <div class="chk-card" id="pc-ill" onclick="toggleChk('pc-ill','px-ill')" style="--ac:var(--sl)"><div class="chk-box" id="px-ill"></div><div><div class="chk-text">🏥 You or a loved one has a serious or chronic illness (cancer, heart failure, COPD, kidney disease, etc.)</div></div></div>
+    <div class="chk-card" id="pc-pain" onclick="toggleChk('pc-pain','px-pain')" style="--ac:var(--sl)"><div class="chk-box" id="px-pain"></div><div><div class="chk-text">😣 Ongoing pain, shortness of breath, or fatigue that affects daily life</div></div></div>
+    <div class="chk-card" id="pc-dec" onclick="toggleChk('pc-dec','px-dec')" style="--ac:var(--sl)"><div class="chk-box" id="px-dec"></div><div><div class="chk-text">🤔 Facing difficult medical decisions about treatment options</div></div></div>
+    <div class="chk-card" id="pc-em" onclick="toggleChk('pc-em','px-em')" style="--ac:var(--sl)"><div class="chk-box" id="px-em"></div><div><div class="chk-text">💙 Feeling emotionally overwhelmed, anxious, or sad due to a health condition</div></div></div>
+    <div class="chk-card" id="pc-fam" onclick="toggleChk('pc-fam','px-fam')" style="--ac:var(--sl)"><div class="chk-box" id="px-fam"></div><div><div class="chk-text">👨‍👩‍👧 Family members or caregivers who need support and guidance</div></div></div>
+    <div class="chk-card" id="pc-plan" onclick="toggleChk('pc-plan','px-plan')" style="--ac:var(--sl)"><div class="chk-box" id="px-plan"></div><div><div class="chk-text">📋 You want to plan ahead and make sure your wishes are known</div></div></div>
+  </div>
+  <div class="nbar"><button class="btn" style="background:var(--sl);color:#fff" onclick="showPalResult()">See If Palliative Care May Help →</button></div>
+</div>
+
+<div class="sc" id="pal-res">
+  <div class="back-bar" onclick="backToHub()"><span>← Main Menu</span></div>
+  <div class="shdr sl"><div class="eye">Palliative Care Results</div><div class="ht" id="pal-res-ht"></div></div>
+  <div class="bd" id="pal-res-body"></div>
+  <div class="nbar" id="pal-res-nav"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ WOUND CARE -->
+<div class="sc" id="wnd-w">
+  <div class="back-bar" onclick="backToHub()"><span>← Main Menu</span></div>
+  <div class="shdr gn"><div class="eye">Wound Care · Infectious Disease</div><div class="ht">🩹 Wound Care Check</div><div class="hsb">A wound that doesn't heal is more than a minor problem. Our wound care team specializes in getting you better, faster.</div></div>
+  <div class="bd">
+    <div class="tip gn"><div class="tipt">When to seek wound care</div>If a wound hasn't improved significantly after 4 weeks of basic care, it's time to see a specialist. Non-healing wounds can lead to serious infections, hospitalization, or worse.</div>
+  </div>
+  <div class="nbar"><button class="btn gn" onclick="go('wnd-q')">Check My Wound →</button></div>
+</div>
+
+<div class="sc" id="wnd-q">
+  <div class="back-bar" onclick="go('wnd-w')"><span>← Back</span></div>
+  <div class="shdr gn"><div class="eye">Wound Care Screening</div><div class="ht" style="font-size:18px">Tap all that apply to your situation</div></div>
+  <div class="bd">
+    <div class="chk-card" id="wc-4wk" onclick="toggleChk('wc-4wk','wx-4wk')" style="--ac:var(--gn)"><div class="chk-box" id="wx-4wk"></div><div><div class="chk-text">📅 A wound or sore that hasn't healed in more than 4 weeks</div></div></div>
+    <div class="chk-card" id="wc-diab" onclick="toggleChk('wc-diab','wx-diab')" style="--ac:var(--gn)"><div class="chk-box" id="wx-diab"></div><div><div class="chk-text">🩸 You have diabetes (especially a wound on the foot or leg)</div></div></div>
+    <div class="chk-card" id="wc-pres" onclick="toggleChk('wc-pres','wx-pres')" style="--ac:var(--gn)"><div class="chk-box" id="wx-pres"></div><div><div class="chk-text">🛏️ A pressure sore or bedsore (from prolonged bed rest or wheelchair use)</div></div></div>
+    <div class="chk-card" id="wc-circ" onclick="toggleChk('wc-circ','wx-circ')" style="--ac:var(--gn)"><div class="chk-box" id="wx-circ"></div><div><div class="chk-text">🦵 Poor circulation in the legs or a venous leg ulcer</div></div></div>
+    <div class="chk-card" id="wc-surg" onclick="toggleChk('wc-surg','wx-surg')" style="--ac:var(--gn)"><div class="chk-box" id="wx-surg"></div><div><div class="chk-text">🏥 A surgical wound that isn't closing or keeps reopening</div></div></div>
+    <div class="chk-card" id="wc-inf" onclick="toggleChk('wc-inf','wx-inf')" style="--ac:var(--gn)"><div class="chk-box" id="wx-inf"></div><div><div class="chk-text">🔴 Redness, warmth, drainage, or odor from a wound</div></div></div>
+    <div class="chk-card" id="wc-pain" onclick="toggleChk('wc-pain','wx-pain')" style="--ac:var(--gn)"><div class="chk-box" id="wx-pain"></div><div><div class="chk-text">😣 Increasing pain around a wound</div></div></div>
+  </div>
+  <div class="nbar"><button class="btn gn" onclick="showWndResult()">See My Results →</button></div>
+</div>
+
+<div class="sc" id="wnd-res">
+  <div class="back-bar" onclick="backToHub()"><span>← Main Menu</span></div>
+  <div class="shdr gn"><div class="eye">Wound Care Results</div><div class="ht" id="wnd-res-ht"></div></div>
+  <div class="bd" id="wnd-res-body"></div>
+  <div class="nbar" id="wnd-res-nav"></div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ INFECTIOUS DISEASE / PrEP -->
+<div class="sc" id="prep-w">
+  <div class="back-bar" onclick="backToHub()"><span>← Main Menu</span></div>
+  <div class="shdr rose"><div class="eye">Infectious Disease · HIV Prevention</div><div class="ht">🛡️ HIV Prevention (PrEP) Check</div><div class="hsb">PrEP is a highly effective medication that prevents HIV. Find out if the daily pill or a bi-monthly injection may be right for you.</div></div>
+  <div class="bd">
+    <div class="tip rose"><div class="tipt">What is PrEP?</div>PrEP (Pre-Exposure Prophylaxis) is a safe, FDA-approved medication for people who don't have HIV but may be at risk. When taken as directed, PrEP reduces the risk of getting HIV from sex by about 99%. There are now two options: a daily pill or an injection every 2 months.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0">
+      <div style="background:var(--g1);border-radius:12px;padding:14px;text-align:center"><div style="font-size:26px;margin-bottom:6px">💊</div><div style="font-size:12px;font-weight:700;color:var(--g8)">Daily Pill</div><div style="font-size:11px;color:var(--g4);margin-top:3px">Truvada · Descovy</div></div>
+      <div style="background:var(--g1);border-radius:12px;padding:14px;text-align:center"><div style="font-size:26px;margin-bottom:6px">💉</div><div style="font-size:12px;font-weight:700;color:var(--g8)">Bi-Monthly Injection</div><div style="font-size:11px;color:var(--g4);margin-top:3px">Apretude · every 2 months</div></div>
+    </div>
+    <div class="tip gy">🔒 This screening is completely private and non-judgmental. PrEP is for anyone who may be at risk — regardless of gender, orientation, or lifestyle.</div>
+  </div>
+  <div class="nbar"><button class="btn rose" onclick="go('prep-q')">Check My Eligibility →</button></div>
+</div>
+
+<div class="sc" id="prep-q">
+  <div class="back-bar" onclick="go('prep-w')"><span>← Back</span></div>
+  <div class="shdr rose"><div class="eye">PrEP Eligibility Check · Infectious Disease</div><div class="ht" style="font-size:18px">A few quick questions</div><div class="hsb">All answers are private. There are no wrong answers here.</div></div>
+  <div class="bd">
+    <div style="font-size:14px;font-weight:700;color:var(--g8);margin-bottom:8px">1. Do you currently know your HIV status?</div>
+    <div class="opt-grid" id="prep-hiv" style="--ac:var(--rose)">
+      <div class="opt" onclick="selectOpt('prep-hiv','neg',this)"><div class="opt-circle"></div><div><div class="opt-text">Yes — I've tested negative</div></div></div>
+      <div class="opt" onclick="selectOpt('prep-hiv','pos',this)"><div class="opt-circle"></div><div><div class="opt-text">Yes — I've tested positive</div></div></div>
+      <div class="opt" onclick="selectOpt('prep-hiv','unknown',this)"><div class="opt-circle"></div><div><div class="opt-text">I haven't been tested recently</div></div></div>
+    </div>
+
+    <div style="font-size:14px;font-weight:700;color:var(--g8);margin:14px 0 6px">2. Check any that apply to your situation:</div>
+    <div class="chk-card" id="pc-partner" onclick="toggleChk('pc-partner','px-partner')" style="--ac:var(--rose)"><div class="chk-box" id="px-partner"></div><div><div class="chk-text">❤️ I have a sexual partner who is HIV-positive or whose status I don't know</div></div></div>
+    <div class="chk-card" id="pc-condom" onclick="toggleChk('pc-condom','px-condom')" style="--ac:var(--rose)"><div class="chk-box" id="px-condom"></div><div><div class="chk-text">🙅 I sometimes have sex without a condom</div></div></div>
+    <div class="chk-card" id="pc-sti" onclick="toggleChk('pc-sti','px-sti')" style="--ac:var(--rose)"><div class="chk-box" id="px-sti"></div><div><div class="chk-text">🔬 I've been diagnosed with an STI (chlamydia, gonorrhea, syphilis, etc.) in the past 12 months</div></div></div>
+    <div class="chk-card" id="pc-needle" onclick="toggleChk('pc-needle','px-needle')" style="--ac:var(--rose)"><div class="chk-box" id="px-needle"></div><div><div class="chk-text">💉 I inject drugs or have shared needles or syringes</div></div></div>
+    <div class="chk-card" id="pc-multi" onclick="toggleChk('pc-multi','px-multi')" style="--ac:var(--rose)"><div class="chk-box" id="px-multi"></div><div><div class="chk-text">👥 I have had multiple sexual partners in the past year</div></div></div>
+
+    <div style="font-size:14px;font-weight:700;color:var(--g8);margin:14px 0 8px">3. Which PrEP option sounds more appealing to you?</div>
+    <div class="opt-grid" id="prep-pref" style="--ac:var(--rose)">
+      <div class="opt" onclick="selectOpt('prep-pref','pill',this)"><div class="opt-circle"></div><div><div class="opt-text">💊 Daily pill</div><div class="opt-sub">Take one tablet every day</div></div></div>
+      <div class="opt" onclick="selectOpt('prep-pref','inject',this)"><div class="opt-circle"></div><div><div class="opt-text">💉 Bi-monthly injection</div><div class="opt-sub">Come in every 2 months for a shot</div></div></div>
+      <div class="opt" onclick="selectOpt('prep-pref','unsure',this)"><div class="opt-circle"></div><div><div class="opt-text">Not sure yet</div></div></div>
+    </div>
+  </div>
+  <div class="nbar"><button class="btn rose" onclick="showPrepResult()">See My Results →</button></div>
+</div>
+
+<div class="sc" id="prep-res">
+  <div class="back-bar" onclick="backToHub()"><span>← Main Menu</span></div>
+  <div class="shdr rose"><div class="eye">PrEP Eligibility Results</div><div class="ht" id="prep-res-ht"></div></div>
+  <div class="bd" id="prep-res-body"></div>
+  <div class="nbar" id="prep-res-nav"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ SHARED: BOOK / SUCCESS / DECLINE -->
+<div class="sc" id="book">
+  <div class="back-bar" onclick="go(bookFrom)"><span>← Back</span></div>
+  <div class="shdr tl">
+    <div class="eye" id="book-eye">Appointment Request</div>
+    <div class="ht" style="font-size:18px" id="book-ht">📋 Request a Consultation</div>
+    <div class="hsb">We'll contact you within 1–2 business days to confirm. No obligation.</div>
+  </div>
+  <div class="bd">
+    <div class="tip tl" id="book-providers" style="margin-bottom:14px"></div>
+    <div class="fg"><label class="fl">👤 Full Name <span style="color:#C0392B">*</span></label><input class="fi" id="fn" type="text" placeholder="First and last name" autocomplete="name"/></div>
+    <div class="fg"><label class="fl">🎂 Date of Birth <span style="color:#C0392B">*</span></label><input class="fi" id="fd" type="date" autocomplete="bday"/></div>
+    <div class="fg"><label class="fl">📱 Phone Number <span style="color:#C0392B">*</span></label><input class="fi" id="fp" type="tel" placeholder="(702) 000-0000" autocomplete="tel"/></div>
+    <div class="fg"><label class="fl">📧 Email Address</label><input class="fi" id="fe" type="email" placeholder="Optional" autocomplete="email"/></div>
+    <div class="fg"><label class="fl">🏥 Insurance Provider</label><input class="fi" id="fi2" type="text" placeholder="Unknown? That's totally OK!"/><div class="fh">We accept most major plans. Our team will verify your benefits at no cost.</div></div>
+    <div class="disc" style="text-align:left;margin-top:6px">By submitting, you consent to PCSC contacting you to schedule this consultation. This is not a confirmed appointment.</div>
+    <button class="btn tl" onclick="submitBook()" style="font-size:16px;padding:16px">📨 Submit My Request</button>
+    <button class="btn gh" onclick="showDecline()">No thanks</button>
+  </div>
+</div>
+
+<div class="sc" id="submitting">
+  <div class="shdr tl" style="min-height:220px;justify-content:center;display:flex;align-items:center;flex-direction:column;text-align:center">
+    <div style="font-size:56px;margin-bottom:18px">📤</div>
+    <div style="font-size:17px;font-weight:700"><span class="spin"></span>Sending your request…</div>
+    <div style="font-size:13px;opacity:.85;margin-top:8px">Just a moment!</div>
+  </div>
+</div>
+
+<div class="sc" id="success">
+  <div class="shdr tl" style="text-align:center;padding:36px 20px 26px">
+    <div style="font-size:60px;line-height:1;margin-bottom:14px">🎉</div>
+    <div style="font-family:'DM Serif Display',serif;font-size:26px;line-height:1.2;margin-bottom:8px">You're all set!</div>
+    <div style="font-size:13px;opacity:.85">Our team will reach out within 1–2 business days to confirm your appointment.</div>
+  </div>
+  <div class="bd">
+    <div class="cc">
+      <div class="cn">Platinum Continuity & Specialty Clinic</div>
+      <div class="cp">📞 725-205-1249</div>
+      <div style="font-size:11px;color:var(--g4);margin-bottom:10px">Call us anytime if you need us sooner</div>
+      <div class="cd" style="font-weight:700;color:var(--g8);margin-bottom:5px">📍 Our Locations:</div>
+      <div class="cd" style="padding-left:14px;margin-bottom:2px">🔹 <b>Spring Valley:</b> 5495 S Rainbow Blvd, Ste 202, Las Vegas, NV 89118</div>
+      <div class="cd" style="padding-left:14px;margin-bottom:2px">🔹 <b>Centennial:</b> 6850 N Durango Dr, Ste 216, Las Vegas, NV 89149</div>
+      <div class="cd" style="padding-left:14px;margin-bottom:2px">🔹 <b>Henderson:</b> 2510 Wigwam Pkwy, Ste 202, Henderson, NV 89074</div>
+      <div class="cd" style="padding-left:14px;margin-bottom:8px">🔹 <b>Valley:</b> 700 Shadow Lane, Ste 240B, Las Vegas, NV 89106</div>
+      <div class="cd">🌐 platinum-pcsc.com</div>
+    </div>
+    <button class="btn nv" onclick="backToHub()">Back to Main Menu</button>
+  </div>
+</div>
+
+<div class="sc" id="decline">
+  <div class="shdr nv" style="text-align:center;padding:28px 20px 22px">
+    <div style="font-size:52px;margin-bottom:12px">😊</div>
+    <div style="font-family:'DM Serif Display',serif;font-size:24px;margin-bottom:6px">No problem at all!</div>
+    <div style="font-size:13px;opacity:.8">Keep our info — we're here whenever you're ready.</div>
+  </div>
+  <div class="bd">
+    <!-- Contact card -->
+    <div class="cc">
+      <div class="cn">Platinum Continuity &amp; Specialty Clinic</div>
+      <div class="cp">📞 725-205-1249</div>
+      <div style="margin-top:10px">
+        <div class="cd">📠 Fax: 702-725-2530</div>
+        <div class="cd">🌐 platinum-pcsc.com</div>
+        <div class="cd">✉️ pcsc@platinumhospitalists.com</div>
+        <div class="cd" style="font-weight:700;color:var(--g8);margin-top:8px;margin-bottom:5px">📍 Our Locations:</div>
+        <div class="cd" style="padding-left:14px;margin-bottom:2px">🔹 <b>Spring Valley:</b> 5495 S Rainbow Blvd, Ste 202, Las Vegas, NV 89118</div>
+        <div class="cd" style="padding-left:14px;margin-bottom:2px">🔹 <b>Centennial:</b> 6850 N Durango Dr, Ste 216, Las Vegas, NV 89149</div>
+        <div class="cd" style="padding-left:14px;margin-bottom:2px">🔹 <b>Henderson:</b> 2510 Wigwam Pkwy, Ste 202, Henderson, NV 89074</div>
+        <div class="cd" style="padding-left:14px">🔹 <b>Valley:</b> 700 Shadow Lane, Ste 240B, Las Vegas, NV 89106</div>
+      </div>
+    </div>
+
+    <!-- Save to contacts -->
+    <div style="border:2px solid var(--tl);border-radius:14px;padding:16px;margin-bottom:14px">
+      <div style="font-size:14px;font-weight:700;color:var(--g8);margin-bottom:4px">📲 Save our info to your phone</div>
+      <div style="font-size:12px;color:var(--g6);margin-bottom:12px;line-height:1.5">Tap the button below to download our contact card. Your phone will ask you to add it — just tap <b>"Add Contact."</b></div>
+      <button class="btn tl" onclick="saveContact()" style="font-size:14px;padding:13px">💾 Save as Contact (iPhone &amp; Android)</button>
+      <div style="font-size:11px;color:var(--g4);text-align:center;margin-top:8px">Works on iPhone &amp; Android · Opens your Contacts app automatically</div>
+    </div>
+
+    <!-- Screenshot tip -->
+    <div style="background:#FEF9C3;border:1.5px solid #EAB308;border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;gap:12px;align-items:flex-start">
+      <div style="font-size:28px;line-height:1;flex-shrink:0">📸</div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:#713F12;margin-bottom:3px">Screenshot this page!</div>
+        <div style="font-size:12px;color:#854D0E;line-height:1.5">Can't save contacts right now? Take a screenshot — it's a quick backup.<br/><b>iPhone:</b> Side button + Volume Up &nbsp;|&nbsp; <b>Android:</b> Power + Volume Down</div>
+      </div>
+    </div>
+
+
+
+    <div class="tip tl">💚 Our multispecialty team accepts most major insurance plans. Call us anytime — we're happy to help!</div>
+    <button class="btn gh" onclick="backToHub()">Back to Main Menu</button>
+  </div>
+</div>
+
+</div><!-- end .app -->
+<script>
+// ─── STATE ──────────────────────────────────────────────────────────────
+let cur='hub', bookFrom='hub', bookSpecialty='', bookProviders='';
+let opts={}, chks={};
+let lupCatIdx=0, lupTicked={};
+
+// ─── NAVIGATION ─────────────────────────────────────────────────────────
+function go(id){
+  document.getElementById(cur).classList.remove('on');
+  document.getElementById(id).classList.add('on');
+  cur=id;
+  window.scrollTo(0,0);
+}
+function backToHub(){
+  // Reset all state
+  opts={}; chks={};
+  go('hub');
+}
+
+// ─── OPTION SELECTOR (radio style) ──────────────────────────────────────
+function selectOpt(group, val, el){
+  opts[group]=val;
+  const container = el.closest('.opt-grid') || el.parentElement;
+  container.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+// ─── CHECKBOX TOGGLE ────────────────────────────────────────────────────
+function toggleChk(cardId, boxId){
+  const card=document.getElementById(cardId);
+  const isNow=!card.classList.contains('sel');
+  card.classList.toggle('sel',isNow);
+  chks[boxId]=isNow;
+}
+
+function isChked(id){ return !!chks[id]; }
+
+// ─── CLINIC CARD HTML ────────────────────────────────────────────────────
+function clinicCard(){
+  return `<div class="cc"><div class="cn">Platinum Continuity &amp; Specialty Clinic</div><div class="cp">📞 725-205-1249</div><div style="font-size:11px;color:var(--g4);margin-bottom:10px">Call us anytime — we're happy to help</div><div class="cd" style="font-weight:700;color:var(--g8);margin-bottom:5px">📍 Our Locations:</div><div class="cd" style="padding-left:14px;margin-bottom:2px">🔹 <b>Spring Valley:</b> 5495 S Rainbow Blvd, Ste 202, Las Vegas, NV 89118</div><div class="cd" style="padding-left:14px;margin-bottom:2px">🔹 <b>Centennial:</b> 6850 N Durango Dr, Ste 216, Las Vegas, NV 89149</div><div class="cd" style="padding-left:14px;margin-bottom:2px">🔹 <b>Henderson:</b> 2510 Wigwam Pkwy, Ste 202, Henderson, NV 89074</div><div class="cd" style="padding-left:14px;margin-bottom:8px">🔹 <b>Valley:</b> 700 Shadow Lane, Ste 240B, Las Vegas, NV 89106</div><div class="cd">🌐 platinum-pcsc.com</div></div>`;
+}
+
+function bookBtn(specialtyLabel, providers, resultScreenId){
+  bookSpecialty=specialtyLabel;
+  bookProviders=providers;
+  bookFrom=resultScreenId;
+  return `<button class="btn tl" onclick="openBook('${resultScreenId}','${specialtyLabel.replace(/'/g,"\\'")}','${providers.replace(/'/g,"\\'")}')">🗓️ Request an Appointment</button><button class="btn gh" onclick="showDecline()" style="margin-top:9px">No thanks</button>`;
+}
+
+function openBook(from, specialty, providers){
+  bookFrom=from; bookSpecialty=specialty; bookProviders=providers;
+  document.getElementById('book-eye').textContent='Appointment Request — '+specialty;
+  document.getElementById('book-ht').textContent='📋 '+specialty+' Consultation';
+  document.getElementById('book-providers').innerHTML='<div class="tipt">Your care team</div>'+providers;
+  go('book');
+}
+
+function showDecline(){ go('decline'); }
+
+// ─── BOOKING SUBMIT ──────────────────────────────────────────────────────
+async function submitBook(){
+  const n=document.getElementById('fn').value.trim();
+  const d=document.getElementById('fd').value.trim();
+  const p=document.getElementById('fp').value.trim();
+  if(!n||!d||!p){alert('Please fill in your Name, Date of Birth, and Phone Number.');return;}
+  go('submitting');
+  try{
+    emailjs.init(EJS_KEY);
+    await emailjs.send(EJS_SVC,EJS_TPL,{
+      patient_name:n, patient_dob:d, patient_phone:p,
+      patient_email:document.getElementById('fe').value.trim()||'Not provided',
+      patient_insurance:document.getElementById('fi2').value.trim()||'Unknown',
+      symptom_score:'N/A', screening_result:bookSpecialty,
+      submitted_at:new Date().toLocaleString('en-US',{timeZone:'America/Los_Angeles',dateStyle:'full',timeStyle:'short'})
+    });
+  } catch(e){console.error(e);}
+  go('success');
+}
+
+// ─── BMI CALCULATOR ──────────────────────────────────────────────────────
+let glpBMI=0;
+function calcBMI(){
+  const ft=parseInt(document.getElementById('ht-ft').value)||0;
+  const inches=parseInt(document.getElementById('ht-in').value)||0;
+  const lbs=parseFloat(document.getElementById('wt-lbs').value)||0;
+  if(!ft||lbs<80) return;
+  const totalIn=ft*12+inches;
+  const bmi=(703*lbs)/(totalIn*totalIn);
+  glpBMI=bmi;
+  const d=document.getElementById('bmi-display');
+  d.style.display='block';
+  document.getElementById('bmi-val').textContent=bmi.toFixed(1);
+  const cats=[{t:'Underweight',c:'#1D4ED8'},{t:'Healthy Weight ✓',c:'#1D9E75'},{t:'Overweight',c:'#D97706'},{t:'Obese',c:'#C0392B'}];
+  const cat=bmi<18.5?cats[0]:bmi<25?cats[1]:bmi<30?cats[2]:cats[3];
+  document.getElementById('bmi-cat').textContent=cat.t;
+  document.getElementById('bmi-val').style.color=cat.c;
+  document.getElementById('bmi-cat').style.color=cat.c;
+}
+
+function glpNext1(){
+  if(!glpBMI){alert('Please enter your height and weight first.');return;}
+  go('glp-t2d');
+}
+function glpNext2(){ go('glp-cond'); }
+
+
+// ─── DIABETES SCREENER BMI CALCULATOR ────────────────────────────────────
+function calcDiaBMI(){
+  const ft = parseInt(document.getElementById('dia-ht-ft').value)||0;
+  const inches = parseInt(document.getElementById('dia-ht-in').value)||0;
+  const lbs = parseFloat(document.getElementById('dia-wt-lbs').value)||0;
+  if(!ft || lbs<80) return;
+  const totalIn = ft*12+inches;
+  const bmi = (703*lbs)/(totalIn*totalIn);
+  // Auto-set the ADA score for weight (0, 1, or 2 pts)
+  opts['dia-wt'] = bmi<25?'0':bmi<30?'1':'2';
+  // Show BMI display
+  const d = document.getElementById('dia-bmi-display');
+  d.style.display='block';
+  document.getElementById('dia-bmi-val').textContent = bmi.toFixed(1);
+  const cats=[
+    {t:'Underweight',c:'#1D4ED8'},
+    {t:'Healthy Weight ✓',c:'#1D9E75'},
+    {t:'Overweight',c:'#D97706'},
+    {t:'Obese',c:'#C0392B'}
+  ];
+  const cat = bmi<18.5?cats[0]:bmi<25?cats[1]:bmi<30?cats[2]:cats[3];
+  document.getElementById('dia-bmi-cat').textContent = cat.t;
+  document.getElementById('dia-bmi-val').style.color = cat.c;
+  document.getElementById('dia-bmi-cat').style.color = cat.c;
+}
+// ─── GLP-1 RESULT ────────────────────────────────────────────────────────
+function showGlpResult(){
+  const ins=opts['ins'];
+  const t2d=opts['t2d'];
+  const bmi=glpBMI;
+  const hasCKD=!!chks['cond-ckd'];
+  const hasCondition=['cond-hbp','cond-chol','cond-sleep','cond-heart','cond-liver','cond-ckd'].some(c=>chks[c]);
+  const excluded=['optum','intermountain','culinary'].includes(ins);
+
+  let eligibility='',insNote='',meds='';
+
+  // Eligibility verdict — CKD+T2D is a strong independent indication
+  if(hasCKD&&t2d==='yes'){eligibility='likely';}  // FDA-approved kidney indication
+  else if(bmi>=30){eligibility='likely';}
+  else if(bmi>=27&&(t2d==='yes'||hasCondition)){eligibility='likely';}
+  else if(bmi>=25&&t2d==='yes'){eligibility='possible';}
+  else if(hasCKD&&bmi>=27){eligibility='possible';}  // CKD+obesity, indirect benefit
+  else{eligibility='low';}
+
+  // Insurance note
+  const insNotes={
+    medicare:t2d==='yes'?'✅ Medicare typically covers Ozempic and Mounjaro for Type 2 Diabetes management. Note: Medicare currently has limited coverage for weight-loss-only GLP-1 use — our team can verify your specific plan.':'⚠️ Medicare currently does not cover GLP-1 medications for weight loss without a diabetes diagnosis. Our team can explore your options.',
+    medicaid:'✅ Nevada Medicaid plans in Southern Nevada — Molina Healthcare, Anthem, Nevada Total Care, SilverSummit, and HPN Medicaid — generally cover GLP-1 medications, though coverage details vary by plan and diagnosis. Our team will verify your specific benefits at no cost.',
+    commercial:'✅ Most employer insurance plans (BCBS, Aetna, Cigna, UHC, Humana, HPN) cover GLP-1 medications with prior authorization. We handle all the paperwork — you just show up.',
+    va:'✅ We accept VA benefits with prior authorization. Our team is experienced with the VA prior auth process and will handle all coordination on your behalf — at no cost to you.',
+    none:'💡 Even without insurance, manufacturer savings programs can help. Ozempic can be as low as $25–35/month with Novo Nordisk\'s savings card. Our team will help you apply.',
+    other:'Our team will verify your insurance benefits at no cost before your appointment.',
+  };
+
+  if(excluded){
+    insNote=`⚠️ We currently don't accept ${ins==='optum'?'Optum Health':ins==='intermountain'?'Intermountain Health':'Culinary / Nevada Coalition'} insurance for these services. However, our team can help you explore manufacturer savings programs that may significantly reduce your cost — many patients pay $35 or less per month.`;
+  } else {
+    insNote=insNotes[ins]||insNotes.other;
+  }
+
+  // Medications — CKD+T2D: semaglutide has specific FDA kidney indication
+  const medList=[];
+  if(hasCKD&&t2d==='yes'){medList.push('⭐ Ozempic / semaglutide (FDA-approved kidney + diabetes indication)');}
+  else if(t2d==='yes'){medList.push('Ozempic (semaglutide)','Mounjaro (tirzepatide)');}
+  if(bmi>=30){medList.push('Wegovy (semaglutide)','Zepbound (tirzepatide)');}
+  if(bmi>=27&&hasCondition&&bmi<30&&!medList.some(m=>m.includes('Wegovy'))){medList.push('Wegovy (semaglutide)','Zepbound (tirzepatide)');}
+  if(!medList.length){medList.push('Options to discuss with your provider');}
+
+  const verdicts={
+    likely:{cls:'tl',icon:'✅',h:'You may be eligible!',b:'Based on your BMI and health profile, you may qualify for FDA-approved weight loss or diabetes medications. A consultation with our endocrinology team can confirm eligibility and get you started.'},
+    possible:{cls:'am',icon:'⚠️',h:'You may partially qualify',b:'Your profile may meet criteria for certain GLP-1 medications, particularly for diabetes management. Our endocrinology team can do a full evaluation and determine the best approach for you.'},
+    low:{cls:'gy',icon:'ℹ️',h:'You may not meet standard criteria right now',b:'Based on your answers, you may not currently meet the standard BMI or diagnosis criteria for these medications. However, a consultation with our team is always free — there may be other options for weight or metabolic health.'},
+  }[eligibility];
+
+  setLastResult('Endocrinology / Weight Management (GLP-1)',eligibility==='likely'?'May be Eligible':eligibility==='possible'?'Partially Eligible':'Not Currently Eligible',verdicts.b);
+  document.getElementById('glp-res-ht').textContent=eligibility==='likely'?'Great news — let\'s talk!':eligibility==='possible'?'Possible candidate':'Let\'s explore your options';
+
+  let html=`<div class="tip ${verdicts.cls}"><div class="tipt">${verdicts.icon} ${verdicts.h}</div>${verdicts.b}</div>`;
+  if(hasCKD&&t2d==='yes'){html+=`<div class="tip bl"><div class="tipt">🫘 Important: CKD + Diabetes Update (2025)</div>As of 2025, the FDA has approved semaglutide (Ozempic) specifically to reduce the risk of kidney decline, end-stage kidney disease, and cardiovascular death in adults with Type 2 diabetes and chronic kidney disease. This makes you a strong candidate — your endocrinologist can discuss this indication in detail.</div>`;}
+  else if(hasCKD&&!t2d){html+=`<div class="tip gy"><div class="tipt">🫘 A note about CKD without diabetes</div>While CKD alone is not currently a primary labeled indication for GLP-1 medications, if you also have obesity (BMI 27+), GLP-1s may be used for the obesity indication and may provide indirect kidney protection. Your provider will weigh the options.</div>`;}
+  if(medList[0]!=='Options to discuss with your provider'){
+    html+=`<div style="font-size:13px;font-weight:700;color:var(--g8);margin-bottom:8px">💊 Medications that may apply to you:</div>`;
+    html+=`<div style="background:var(--g1);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:13px;color:var(--g6);line-height:2">${medList.map(m=>'· '+m).join('<br/>')}</div>`;
+  }
+  html+=`<div style="font-size:13px;font-weight:700;color:var(--g8);margin-bottom:8px">🏥 Insurance coverage:</div>`;
+  html+=`<div style="background:var(--g1);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--g6);line-height:1.65">${insNote}</div>`;
+  if(!excluded){
+    html+=`<div style="font-size:15px;font-weight:700;color:var(--g8);margin-bottom:14px">Would you like a FREE consultation with our endocrinology team?</div>`;
+  }
+  document.getElementById('glp-res-body').innerHTML=html;
+
+  const providers='PCSC Endocrinology Team';
+  document.getElementById('glp-res-nav').innerHTML=excluded
+    ?clinicCard()+'<button class="btn gh" onclick="backToHub()">Back to Main Menu</button>'
+    :bookBtn('Endocrinology / Weight Management',providers,'glp-res');
+
+  go('glp-res');
+}
+
+// ─── DIABETES (ADA) RESULT ───────────────────────────────────────────────
+function showDiaResult(){
+  const sc=['dia-age','dia-fam','dia-hbp','dia-act','dia-wt','dia-gest'].reduce((s,k)=>s+parseInt(opts[k]||0),0);
+  const high=sc>=5;
+  setLastResult('Diabetes Risk Check (ADA)',high?'Higher Risk — Score '+sc+'/10':'Lower Risk — Score '+sc+'/10',high?'Your score suggests a higher risk for Type 2 Diabetes. A formal screening test with your provider is recommended.':'Your score suggests a lower risk at this time. Continue healthy habits and schedule regular checkups.');
+  document.getElementById('dia-res-ht').textContent=high?'Higher risk detected':'Lower risk — keep it up!';
+  const tip=high
+    ?`<div class="tip cr"><div class="tipt">⚠️ Your score suggests higher risk for Type 2 Diabetes</div>A score of ${sc} out of 10 indicates you should talk to a healthcare provider about getting tested for Type 2 Diabetes. The good news: early detection can prevent or significantly delay diabetes with lifestyle changes or medication.</div>`
+    :`<div class="tip tl"><div class="tipt">✅ Your score suggests lower risk right now</div>Your score of ${sc} suggests you have a lower risk at this time. Keep up healthy habits — regular activity, balanced eating, and annual checkups can help keep your risk low.</div>`;
+  const ada=`<div style="font-size:10px;color:var(--g4);margin-bottom:14px;line-height:1.5">Source: American Diabetes Association Type 2 Diabetes Risk Test · © ADA · diabetes.org/diabetes-risk-test</div>`;
+  const endoProviders='PCSC Endocrinology Team';
+  document.getElementById('dia-res-body').innerHTML=`<div class="score-ring"><div class="ring-num">${sc}</div><div class="ring-info"><b>Risk Score</b><span>${high?'5+ = Higher risk':'Under 5 = Lower risk'}</span></div></div>${tip}${ada}`;
+  document.getElementById('dia-res-nav').innerHTML=high
+    ?bookBtn('Endocrinology / Diabetes Care',endoProviders,'dia-res')
+    :`${clinicCard()}<button class="btn gh" onclick="backToHub()">Back to Main Menu</button>`;
+  go('dia-res');
+}
+
+// ─── SLEEP APNEA (STOP-BANG) ─────────────────────────────────────────────
+const sleepQs=[
+  {k:'sb-s',q:'Do you snore loudly enough to be heard through a closed door?'},
+  {k:'sb-t',q:'Do you often feel tired, fatigued, or sleepy during the day — even after a full night of sleep?'},
+  {k:'sb-o',q:'Has anyone ever observed you stop breathing or gasp for air while you were sleeping?'},
+  {k:'sb-p',q:'Do you have or are you being treated for high blood pressure?'},
+  {k:'sb-b',q:'Is your BMI greater than 35? (Or are you significantly overweight?)'},
+  {k:'sb-a',q:'Are you over 50 years old?'},
+  {k:'sb-n',q:'Is your neck noticeably large or thick? (collar size 17"+ for men, 16"+ for women)'},
+  {k:'sb-g',q:'Are you male?'},
+];
+(function buildSleepQs(){
+  const el=document.getElementById('sleep-qs');
+  sleepQs.forEach((q,i)=>{
+    const div=document.createElement('div');
+    div.style.cssText='margin-bottom:14px;background:var(--g1);border-radius:12px;padding:14px';
+    if(q.k==='sb-b'){
+      // Q5 — BMI: show height/weight inputs instead of Yes/No
+      div.innerHTML=`
+        <div style="font-size:13px;font-weight:600;color:var(--g8);margin-bottom:10px;line-height:1.4">${i+1}. What is your height and weight?</div>
+        <div class="hw-row">
+          <div class="hw-group"><label class="hw-label">Height — Feet</label>
+            <select class="hw-inp" id="sl-ht-ft" onchange="calcSleepBMI()" style="border-color:#E2E8F0">
+              <option value="">ft</option><option>4</option><option>5</option><option>6</option><option>7</option>
+            </select></div>
+          <div class="hw-group"><label class="hw-label">Inches</label>
+            <select class="hw-inp" id="sl-ht-in" onchange="calcSleepBMI()" style="border-color:#E2E8F0">
+              <option value="">in</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option>
+            </select></div>
+        </div>
+        <label class="hw-label">Weight (pounds)</label>
+        <input class="hw-inp" id="sl-wt-lbs" type="number" placeholder="e.g. 210" min="80" max="600" oninput="calcSleepBMI()" style="text-align:left;border-color:#E2E8F0;margin-bottom:10px"/>
+        <div class="bmi-display" id="sl-bmi-display" style="display:none;margin-top:4px;margin-bottom:0">
+          <div class="bmi-num" id="sl-bmi-val"></div>
+          <div class="bmi-label" id="sl-bmi-cat"></div>
+          <div class="bmi-sub">BMI &gt; 35 counts as a risk factor for sleep apnea</div>
+        </div>`;
+    } else {
+      div.innerHTML=`<div style="font-size:13px;font-weight:600;color:var(--g8);margin-bottom:10px;line-height:1.4">${i+1}. ${q.q}</div><div style="display:flex;gap:8px"><div class="opt" id="${q.k}-y" onclick="selectOpt('${q.k}','yes',this)" style="flex:1;--ac:var(--bl)"><div class="opt-circle"></div><div class="opt-text">Yes</div></div><div class="opt" id="${q.k}-n" onclick="selectOpt('${q.k}','no',this)" style="flex:1;--ac:var(--bl)"><div class="opt-circle"></div><div class="opt-text">No</div></div></div>`;
+    }
+    el.appendChild(div);
+  });
+})();
+
+function calcSleepBMI(){
+  const ft=parseInt(document.getElementById('sl-ht-ft').value)||0;
+  const inches=parseInt(document.getElementById('sl-ht-in').value)||0;
+  const lbs=parseFloat(document.getElementById('sl-wt-lbs').value)||0;
+  if(!ft||lbs<80) return;
+  const totalIn=ft*12+inches;
+  const bmi=(703*lbs)/(totalIn*totalIn);
+  // STOP-BANG B criterion: BMI > 35
+  opts['sb-b']=bmi>35?'yes':'no';
+  const d=document.getElementById('sl-bmi-display');
+  d.style.display='block';
+  document.getElementById('sl-bmi-val').textContent=bmi.toFixed(1);
+  const cats=[
+    {t:'Underweight',c:'#1D4ED8'},
+    {t:'Healthy Weight ✓',c:'#1D9E75'},
+    {t:'Overweight',c:'#D97706'},
+    {t:'Obese (Class 1)',c:'#C0392B'},
+    {t:'Obese (Class 2) — BMI risk factor: Yes',c:'#7F1D1D'},
+  ];
+  const cat=bmi<18.5?cats[0]:bmi<25?cats[1]:bmi<30?cats[2]:bmi<35?cats[3]:cats[4];
+  document.getElementById('sl-bmi-cat').textContent=cat.t;
+  document.getElementById('sl-bmi-val').style.color=cat.c;
+  document.getElementById('sl-bmi-cat').style.color=cat.c;
+}
+
+function showSleepResult(){
+  const sc=sleepQs.filter(q=>opts[q.k]==='yes').length;
+  const lvl=sc<=2?'low':sc<=4?'moderate':'high';
+  const sleepLvlLabel=lvl==='high'?'High Risk':lvl==='moderate'?'Intermediate Risk':'Low Risk';
+  const sleepSummary=sc+' out of 8 STOP-BANG risk factors identified. '+(lvl==='high'?'A formal sleep study is strongly recommended.':lvl==='moderate'?'A sleep evaluation is worth considering.':'Lower risk at this time.');
+  setLastResult('Sleep Apnea Screening (STOP-BANG)',sleepLvlLabel,sleepSummary);
+  document.getElementById('sleep-res-ht').textContent=sc+' risk factor'+(sc!==1?'s':'')+' found';
+  const M={
+    low:{cls:'tl',icon:'✅',h:'Low risk for sleep apnea',b:'Your responses suggest a lower risk for obstructive sleep apnea. If you still feel tired during the day or have been told you snore, it\'s worth mentioning to your doctor at your next visit.'},
+    moderate:{cls:'am',icon:'⚠️',h:'Moderate risk — worth checking',b:'Your responses suggest an intermediate risk for sleep apnea. We recommend a formal sleep evaluation. Untreated sleep apnea increases risk for heart disease, stroke, and diabetes.'},
+    high:{cls:'cr',icon:'🔔',h:'High risk — evaluation recommended',b:`You reported ${sc} out of 8 risk factors for obstructive sleep apnea. This suggests a high likelihood. A formal sleep study (which can often be done at home) is strongly recommended. The good news: sleep apnea is very treatable.`},
+  }[lvl];
+  document.getElementById('sleep-res-body').innerHTML=`<div class="score-ring"><div class="ring-num">${sc}</div><div class="ring-info"><b>${sc} of 8 risk factors</b><span>STOP-BANG validated tool</span></div></div><div class="tip ${M.cls}"><div class="tipt">${M.icon} ${M.h}</div>${M.b}</div>`;
+  document.getElementById('sleep-res-nav').innerHTML=lvl!=='low'
+    ?bookBtn('Pulmonology / Sleep Medicine','PCSC Pulmonology Team','sleep-res')
+    :`${clinicCard()}<button class="btn gh" onclick="backToHub()">Back to Main Menu</button>`;
+  go('sleep-res');
+}
+
+// ─── MENTAL WELLNESS (PHQ-9 + GAD-7) ─────────────────────────────────────
+const phq9Qs=[
+  'Little interest or pleasure in doing things you normally enjoy',
+  'Feeling down, depressed, or hopeless',
+  'Trouble falling asleep, staying asleep, or sleeping too much',
+  'Feeling tired or having little energy',
+  'Poor appetite — or eating much more than usual',
+  'Feeling bad about yourself, or that you\'ve let people down',
+  'Trouble concentrating on things like TV, reading, or conversations',
+  'Moving or talking so slowly that others notice — or being so fidgety you can\'t sit still',
+  'Thoughts that you would be better off dead, or of hurting yourself in some way',
+];
+const gad7Qs=[
+  'Feeling nervous, anxious, or on edge',
+  'Not being able to stop or control worrying',
+  'Worrying too much about different things',
+  'Trouble relaxing',
+  'Being so restless that it\'s hard to sit still',
+  'Becoming easily annoyed or irritable',
+  'Feeling afraid that something awful might happen',
+];
+const mScale=['Not at all','A few days','More than half the days','Almost every day'];
+
+function buildScaleQs(container,qs,prefix){
+  const el=document.getElementById(container);
+  qs.forEach((q,i)=>{
+    const div=document.createElement('div');
+    div.className='scale-q';
+    div.innerHTML=`<div class="scale-q-text">${i+1}. ${q}</div><div class="scale-opts">${mScale.map((s,v)=>`<div class="scale-opt" onclick="selectOpt('${prefix}${i}','${v}',this)" style="--ac:var(--pu)">${s}</div>`).join('')}</div>`;
+    el.appendChild(div);
+  });
+}
+buildScaleQs('phq9-qs',phq9Qs,'phq');
+buildScaleQs('gad7-qs',gad7Qs,'gad');
+
+function showMentalResult(){
+  const phq=phq9Qs.reduce((s,_,i)=>s+parseInt(opts[`phq${i}`]||0),0);
+  const gad=gad7Qs.reduce((s,_,i)=>s+parseInt(opts[`gad${i}`]||0),0);
+  const crisis=parseInt(opts['phq8']||0)>=1;
+  const phqLvl=phq<=4?'Minimal':phq<=9?'Mild':phq<=14?'Moderate':phq<=19?'Moderately Severe':'Severe';
+  const gadLvl=gad<=4?'Minimal':gad<=9?'Mild':gad<=14?'Moderate':'Severe';
+  const needsRef=phq>=10||gad>=10;
+  setLastResult('Mental Wellness (PHQ-9 + GAD-7)','Depression: '+phqLvl+' | Anxiety: '+gadLvl,'PHQ-9 (Depression) Score: '+phq+' — '+phqLvl+'. GAD-7 (Anxiety) Score: '+gad+' — '+gadLvl+'. '+( needsRef?'A consultation with our behavioral health team is recommended.':'Continue self-care and reach out if symptoms worsen.'));
+  document.getElementById('ment-res-ht').textContent='Your results are ready';
+  let html='';
+  if(crisis){html+=`<div class="tip cr"><div class="tipt">💜 A note about question 9</div>You indicated some thoughts about self-harm. Please know that you are not alone. If you are in crisis, please call or text <strong>988</strong> (Suicide & Crisis Lifeline) right now. Our team can also help connect you with support.</div>`;}
+  html+=`<div class="score-ring"><div style="text-align:center"><div style="font-size:24px;font-weight:800;color:var(--pu)">${phq}</div><div style="font-size:10px;color:var(--g4)">Depression</div></div><div class="ring-info"><b>PHQ-9 Score: ${phqLvl}</b><span style="display:block;margin-top:6px">GAD-7 Score: ${gad} — ${gadLvl} anxiety</span></div></div>`;
+  const phqNote=phq<=4?`<div class="tip tl"><div class="tipt">✅ Mood Check: Minimal signs of depression</div>Your score suggests minimal depressive symptoms right now. Keep doing what you're doing!</div>`
+    :phq<=9?`<div class="tip am"><div class="tipt">⚠️ Mood Check: Mild depression</div>Your score of ${phq} suggests mild depressive symptoms. This is very common and very treatable. Speaking with one of our providers is a great first step.</div>`
+    :`<div class="tip cr"><div class="tipt">🔔 Mood Check: ${phqLvl} depression</div>Your score of ${phq} suggests ${phqLvl.toLowerCase()} depression. This is a real medical condition — and it's treatable. Our behavioral health team would love to support you.</div>`;
+  const gadNote=gad<=4?`<div class="tip tl"><div class="tipt">✅ Anxiety Check: Minimal anxiety symptoms</div>Your score suggests minimal anxiety right now.</div>`
+    :gad<=9?`<div class="tip am"><div class="tipt">⚠️ Anxiety Check: Mild anxiety</div>Your score of ${gad} suggests mild anxiety symptoms. Many people feel this way — and a conversation with a provider can make a real difference.</div>`
+    :`<div class="tip cr"><div class="tipt">🔔 Anxiety Check: ${gadLvl} anxiety</div>Your score of ${gad} suggests ${gadLvl.toLowerCase()} anxiety. Our behavioral health team can help.</div>`;
+  html+=phqNote+gadNote;
+  document.getElementById('ment-res-body').innerHTML=html;
+  document.getElementById('ment-res-nav').innerHTML=(needsRef||crisis)
+    ?bookBtn('Behavioral Health / Psychiatry','PCSC Psychiatry Team','ment-res')
+    :`${clinicCard()}<button class="btn gh" onclick="backToHub()">Back to Main Menu</button>`;
+  go('ment-res');
+}
+
+// ─── LUPUS (category-by-category) ────────────────────────────────────────
+const lupCats=[
+  {e:'🌿',l:'Skin & Hair',q:'Any skin or hair changes?',bg:'#E8F8F0',s:[{e:'🦋',n:'Face Rash',d:'Butterfly rash on cheeks & nose'},{e:'☀️',n:'Sun Sensitivity',d:'Rash after sun exposure'},{e:'🔴',n:'Skin Patches',d:'Raised or disc-shaped spots'},{e:'💇',n:'Hair Thinning',d:'Unusual or patchy hair loss'}]},
+  {e:'👄',l:'Mouth & Eyes',q:'Issues with mouth or eyes?',bg:'#EBF5FB',s:[{e:'😮',n:'Mouth Sores',d:'Recurring sores'},{e:'👁',n:'Dry Eyes & Mouth',d:'Persistent dryness'}]},
+  {e:'🦴',l:'Joints & Muscles',q:'Joint or muscle problems?',bg:'#FDF2F8',s:[{e:'🤲',n:'Joint Pain',d:'2+ joints ache or swell'},{e:'🌅',n:'Morning Stiffness',d:'Takes 30+ min to loosen up'}]},
+  {e:'❤️',l:'Chest & Breathing',q:'Chest or breathing issues?',bg:'#FFF0EE',s:[{e:'💢',n:'Chest Pain',d:'Sharp pain breathing deeply or lying flat'},{e:'🌬',n:'Shortness of Breath',d:'Trouble breathing, no clear cause'}]},
+  {e:'💧',l:'Kidneys & Blood',q:'Kidney or blood changes?',bg:'#EFF6FF',s:[{e:'🦵',n:'Body Swelling',d:'Puffy legs, ankles, or eyes'},{e:'🩸',n:'Urine Changes',d:'Foamy, dark, or bloody urine'},{e:'🩺',n:'Low Blood Counts',d:'Told you have anemia or low counts'}]},
+  {e:'🧠',l:'Brain & Nerves',q:'Neurological symptoms?',bg:'#F5F3FF',s:[{e:'⚡',n:'Seizures',d:'No known cause'},{e:'🤕',n:'Severe Headaches',d:'Recurring migraines'},{e:'🌫',n:'Brain Fog',d:'Memory or thinking problems'}]},
+  {e:'⚡',l:'General',q:'General symptoms?',bg:'#FFFBEB',s:[{e:'😴',n:'Extreme Fatigue',d:"Exhaustion that won't improve"},{e:'🌡',n:'Unexplained Fever',d:'100°F+ for days'},{e:'🥶',n:"Raynaud's",d:'Fingers/toes turn white or blue'},{e:'🩸',n:'Blood Clots',d:'History of clots or pregnancy issues'}]},
+  {e:'🔬',l:'Prior Testing',q:'Any prior testing?',bg:'#F9FAFB',s:[{e:'🧪',n:'Positive ANA',d:'Lab showed a positive ANA result'},{e:'🏥',n:'Autoimmune Dx',d:'Told you have an autoimmune condition'}]},
+];
+
+function startLupus(){ lupCatIdx=0; lupTicked={}; loadLupCat(0); go('lup-cat'); }
+function lupusBack(){ if(lupCatIdx>0){lupCatIdx--;loadLupCat(lupCatIdx);}else{go('lup-w');} }
+
+function loadLupCat(idx){
+  const cat=lupCats[idx];
+  document.getElementById('lup-prog-lbl').textContent='Category '+(idx+1)+' of '+lupCats.length+' — '+cat.l;
+  document.getElementById('lup-prog').innerHTML=lupCats.map((_,i)=>`<div class="pseg${i<idx?' done':i===idx?' cur':''}"></div>`).join('');
+  document.getElementById('lup-chdr').style.background=cat.bg;
+  document.getElementById('lup-chdr').innerHTML=`<div class="cat-icon">${cat.e}</div><div class="cat-q">${cat.q}</div><div class="cat-sub">Tap all that apply</div>`;
+  const g=document.getElementById('lup-grid');g.innerHTML='';
+  cat.s.forEach((s,si)=>{
+    const k=idx+'-'+si,c=document.createElement('div');
+    c.className='scard'+(lupTicked[k]?' sel':'');
+    c.innerHTML=`<div class="ckb">✓</div><div class="si">${s.e}</div><div class="sn">${s.n}</div><div class="sd">${s.d}</div>`;
+    c.onclick=()=>{lupTicked[k]=!lupTicked[k];c.classList.toggle('sel',!!lupTicked[k]);updLupCnt(idx);};
+    g.appendChild(c);
+  });
+  updLupCnt(idx);
+  document.getElementById('lup-back-lbl').textContent=idx===0?'← Back to Lupus Info':'← Previous Category';
+}
+
+function updLupCnt(idx){
+  const n=lupCats[idx].s.filter((_,si)=>!!lupTicked[idx+'-'+si]).length;
+  document.getElementById('lup-cnt').textContent=n>0?n+' selected in this category':'Tap any cards that apply';
+}
+
+function lupusNext(){
+  if(lupCatIdx<lupCats.length-1){lupCatIdx++;loadLupCat(lupCatIdx);}
+  else showLupusResult();
+}
+
+function showLupusResult(){
+  const sc=Object.values(lupTicked).filter(Boolean).length;
+  const lvl=sc>=4?'refer':sc===3?'borderline':'low';
+  document.getElementById('lup-res-ht').textContent=sc+' symptom'+(sc!==1?'s':'')+' flagged';
+  const M={
+    low:{cls:'tl',icon:'💚',h:'Low likelihood',b:'Fewer than 3 symptoms. Reassuring — but reach out if symptoms develop or worsen.'},
+    borderline:{cls:'am',icon:'⚠️',h:'Borderline — evaluation recommended',b:'3 symptoms associated with autoimmune conditions. A rheumatology follow-up is a smart next step.'},
+    refer:{cls:'cr',icon:'🔔',h:'Rheumatology consultation recommended',b:`${sc} symptoms consistent with possible lupus or autoimmune disease. A formal evaluation with our rheumatology team is strongly encouraged.`},
+  }[lvl];
+  setLastResult('Lupus & Autoimmune Screening (ACR/EULAR)',lvl==='refer'?'Referral Recommended':lvl==='borderline'?'Borderline':'Low Likelihood',`${sc} out of 22 symptoms flagged. ${M.b}`);
+  document.getElementById('lup-res-body').innerHTML=`<div class="score-ring"><div class="ring-num">${sc}</div><div class="ring-info"><b>${sc} of 22 symptoms</b><span>Based on ACR/EULAR criteria</span></div></div><div class="tip ${M.cls}"><div class="tipt">${M.icon} ${M.h}</div>${M.b}</div>`;
+  document.getElementById('lup-res-nav').innerHTML=lvl!=='low'
+    ?bookBtn('Rheumatology','PCSC Rheumatology Team','lup-res')
+    :`${clinicCard()}<button class="btn gh" onclick="backToHub()">Back to Main Menu</button>`;
+  go('lup-res');
+}
+
+// ─── BONE HEALTH RESULT ──────────────────────────────────────────────────
+function showBoneResult(){
+  const age=parseInt(opts['bone-age']||0);
+  const female=opts['bone-sex']==='1'?1:0;
+  const risks=['bx-fx','bx-par','bx-smk','bx-alc','bx-ster','bx-ra','bx-thin'].filter(b=>chks[b]).length;
+  const sc=age+female+Math.min(risks,3);
+  const lvl=sc>=4?'high':sc>=2?'moderate':'low';
+  document.getElementById('bone-res-ht').textContent=lvl==='high'?'Evaluation recommended':lvl==='moderate'?'Moderate risk factors found':'Lower risk profile';
+  const M={
+    low:{cls:'tl',icon:'✅',h:'Lower risk at this time',b:'Your profile suggests a lower risk for osteoporosis right now. Keep up weight-bearing exercise, calcium intake, and Vitamin D — these are your best defenses.'},
+    moderate:{cls:'am',icon:'⚠️',h:'Moderate risk — worth discussing',b:'You have several risk factors for osteoporosis. A bone density scan (DEXA scan) may be appropriate. Our endocrinology team can assess and recommend the right next step.'},
+    high:{cls:'cr',icon:'🔔',h:'Multiple risk factors — evaluation recommended',b:'Your responses suggest a higher risk profile for osteoporosis or fracture. A DEXA bone density scan is strongly recommended. Treatment options are very effective when started early.'},
+  }[lvl];
+  setLastResult('Bone Health & Osteoporosis Check',lvl==='high'?'Higher Risk — Evaluation Recommended':lvl==='moderate'?'Moderate Risk':'Lower Risk',M.b);
+  const providers='PCSC Endocrinology Team';
+  document.getElementById('bone-res-body').innerHTML=`<div class="tip ${M.cls}"><div class="tipt">${M.icon} ${M.h}</div>${M.b}</div>`;
+  document.getElementById('bone-res-nav').innerHTML=lvl!=='low'
+    ?bookBtn('Endocrinology / Bone Health',providers,'bone-res')
+    :`${clinicCard()}<button class="btn gh" onclick="backToHub()">Back to Main Menu</button>`;
+  go('bone-res');
+}
+
+// ─── PALLIATIVE RESULT ───────────────────────────────────────────────────
+function showPalResult(){
+  const selected=['px-ill','px-pain','px-dec','px-em','px-fam','px-plan'].filter(k=>chks[k]).length;
+  const relevant=selected>=2;
+  setLastResult('Palliative Care Awareness',relevant?'Palliative Care May Be Beneficial':'General Awareness',relevant?'Based on your responses, palliative care support may significantly improve your or your loved one\'s quality of life.':'You may not need palliative care right now, but it\'s good to know about it.');
+  document.getElementById('pal-res-ht').textContent=relevant?'Palliative care may help you':'Good to learn about early';
+  const body=relevant
+    ?`<div class="tip gy"><div class="tipt">🕊️ Palliative care may be a good fit</div>Based on what you shared, you or your loved one may benefit from palliative care support. Our team works alongside your existing doctors — we add a layer of comfort, communication, and coordination.</div><div class="tip tl"><div class="tipt">What palliative care can do for you</div>· Manage pain, fatigue, and other symptoms<br/>· Help you understand treatment options<br/>· Support your family and caregivers<br/>· Help with advance care planning<br/>· Provide emotional and spiritual support</div>`
+    :`<div class="tip tl"><div class="tipt">Good to know about palliative care</div>You may not need palliative care right now — but it's good to know it exists. If you're ever dealing with a serious illness, remember: palliative care is not giving up. It's getting the right support.</div>`;
+  document.getElementById('pal-res-body').innerHTML=body;
+  document.getElementById('pal-res-nav').innerHTML=relevant
+    ?bookBtn('Palliative & Supportive Care','PCSC Palliative & Supportive Care Team','pal-res')
+    :`${clinicCard()}<button class="btn gh" onclick="backToHub()">Back to Main Menu</button>`;
+  go('pal-res');
+}
+
+// ─── WOUND CARE RESULT ───────────────────────────────────────────────────
+function showWndResult(){
+  const selected=['wx-4wk','wx-diab','wx-pres','wx-circ','wx-surg','wx-inf','wx-pain'].filter(k=>chks[k]).length;
+  const urgent=['wx-inf','wx-pain'].some(k=>chks[k]);
+  setLastResult('Wound Care Screening',selected>=2?'Professional Wound Care Recommended':'Monitor and Watch',urgent?'Signs of possible wound infection detected — seek care promptly.':selected>=2?`${selected} wound care symptoms identified. A wound care specialist consultation is recommended.`:'Fewer than 2 wound care concerns noted. Monitor and follow basic wound care.');
+  document.getElementById('wnd-res-ht').textContent=selected>=2?'Our wound care team can help':'Some symptoms to watch';
+  const tip=urgent
+    ?`<div class="tip cr"><div class="tipt">🔴 Signs of possible infection — see a provider soon</div>You indicated signs that may suggest a wound infection (redness, drainage, or increasing pain). Please seek care promptly — today if possible. Our team or urgent care can help.</div>`
+    :selected>=2
+    ?`<div class="tip am"><div class="tipt">⚠️ A non-healing wound needs professional care</div>You checked ${selected} symptoms that suggest a wound that needs specialist attention. Our wound care team specializes in exactly this — and most patients see real improvement quickly.</div>`
+    :`<div class="tip tl"><div class="tipt">✅ Watch and monitor</div>You checked fewer than 2 wound care concerns. Continue basic wound care, keep it clean and covered, and monitor for any changes. If it doesn't improve within 2–4 weeks, reach out.</div>`;
+  document.getElementById('wnd-res-body').innerHTML=tip;
+  document.getElementById('wnd-res-nav').innerHTML=selected>=2
+    ?bookBtn('Wound Care / Infectious Disease','PCSC Wound Care Team','wnd-res')
+    :`${clinicCard()}<button class="btn gh" onclick="backToHub()">Back to Main Menu</button>`;
+  go('wnd-res');
+}
+
+// ─── PrEP / INFECTIOUS DISEASE RESULT ────────────────────────────────────
+function showPrepResult(){
+  const hiv = opts['prep-hiv'];
+  const pref = opts['prep-pref'] || 'unsure';
+  const risks = ['px-partner','px-condom','px-sti','px-needle','px-multi'].filter(k=>chks[k]).length;
+
+  if(hiv === 'pos'){
+    document.getElementById('prep-res-ht').textContent = 'Our team can still help you';
+    document.getElementById('prep-res-body').innerHTML = `
+      <div class="tip rose"><div class="tipt">PrEP is for HIV-negative individuals</div>Since you indicated you've tested positive for HIV, PrEP is not the right medication for you. However, our Infectious Disease team provides comprehensive HIV care and treatment — including medications that allow people with HIV to live full, healthy lives.</div>
+      <div class="tip tl"><div class="tipt">💚 HIV treatment has come a long way</div>With the right treatment, people with HIV can achieve an undetectable viral load — meaning they can't transmit the virus to partners and can live a completely normal lifespan. Our team is here to help.</div>
+      ${clinicCard()}`;
+    document.getElementById('prep-res-nav').innerHTML = bookBtn('Infectious Disease / HIV Care','PCSC Infectious Disease Team','prep-res');
+    go('prep-res'); return;
+  }
+
+  const eligible = hiv === 'neg' || hiv === 'unknown' || risks >= 1;
+  const prefNote = pref === 'pill'
+    ? '<b>💊 Daily Pill (Truvada / Descovy)</b> — One tablet taken every day. Generic Truvada is available and very affordable. Most insurance plans cover it at low or no cost.'
+    : pref === 'inject'
+    ? '<b>💉 Bi-Monthly Injection (Apretude)</b> — Cabotegravir injection given at our clinic every 2 months. No daily pill to remember. Great option if pills are hard to keep up with.'
+    : '<b>Our team can walk you through both options</b> — the daily pill and the bi-monthly injection — and help you choose what fits your life best.';
+
+  setLastResult('HIV Prevention / PrEP Screening',eligible?'Possible PrEP Candidate':'Lower Risk at This Time',eligible?'Based on your responses, PrEP may be an important HIV prevention tool for you. A consultation with our Infectious Disease team can confirm eligibility and get you started.':'Based on your answers, your current HIV risk may be lower. Our team is available anytime to discuss prevention strategies.');
+  document.getElementById('prep-res-ht').textContent = eligible ? 'You may be a great candidate for PrEP' : 'Lower risk right now';
+  
+  let html = '';
+  if(hiv === 'unknown'){
+    html += `<div class="tip am"><div class="tipt">⚠️ First step: Get an HIV test</div>PrEP is only for people who are HIV-negative. The good news: an HIV test is quick, often free, and our clinic can do it. Once you confirm a negative result, we can start PrEP right away.</div>`;
+  }
+  if(eligible){
+    html += `<div class="tip rose"><div class="tipt">✅ You may be a good candidate for PrEP</div>Based on your responses, PrEP could be an important tool for protecting your health. PrEP is safe, highly effective, and covered by most insurance plans.</div>`;
+    html += `<div style="background:var(--g1);border-radius:12px;padding:14px 16px;margin-bottom:14px;font-size:13px;color:var(--g6);line-height:1.8">${prefNote}</div>`;
+    html += `<div class="tip tl"><div class="tipt">💚 Insurance & cost</div>· <b>Most insurance:</b> PrEP is covered at no cost under the ACA<br/>· <b>Medicaid (Nevada):</b> Fully covered<br/>· <b>Medicare:</b> Covered under Part D<br/>· <b>No insurance:</b> The federal <b>Ready, Set, PrEP</b> program provides PrEP at no cost — our team will help you enroll</div>`;
+  } else {
+    html += `<div class="tip tl"><div class="tipt">✅ Lower risk right now</div>Based on your answers, you may have a lower risk at this time. PrEP may not be necessary — but it's always good to stay informed. Our Infectious Disease team is happy to discuss prevention strategies at any time.</div>`;
+  }
+  document.getElementById('prep-res-body').innerHTML = html;
+  document.getElementById('prep-res-nav').innerHTML = eligible
+    ? bookBtn('Infectious Disease / PrEP Consultation','PCSC Infectious Disease Team','prep-res')
+    : `${clinicCard()}<button class="btn gh" onclick="backToHub()">Back to Main Menu</button>`;
+  go('prep-res');
+}
+
+// ─── LAST RESULT TRACKING ────────────────────────────────────────────────
+let lastResult = { specialty:'', level:'', summary:'' };
+function setLastResult(specialty, level, summary){
+  lastResult = { specialty, level, summary };
+}
+
+// ─── SAVE AS CONTACT (vCard) ─────────────────────────────────────────────
+function saveContact(){
+  const vcard = [
+    'BEGIN:VCARD',
+    'VERSION:3.0',
+    'FN:PCSC — Platinum Continuity & Specialty Clinic',
+    'ORG:Platinum Continuity & Specialty Clinic',
+    'TEL;TYPE=WORK,VOICE:+17252051249',
+    'TEL;TYPE=FAX:+17027252530',
+    'EMAIL;TYPE=WORK:pcsc@platinumhospitalists.com',
+    'ADR;TYPE=WORK:;;5495 S Rainbow Blvd Ste 202;Las Vegas;NV;89118;USA',
+    'URL:https://platinum-pcsc.com',
+    'NOTE:Spring Valley: 5495 S Rainbow Blvd Ste 202, Las Vegas NV 89118 | Centennial: 6850 N Durango Dr Ste 216, Las Vegas NV 89149 | Henderson: 2510 Wigwam Pkwy Ste 202, Henderson NV 89074 | Valley: 700 Shadow Lane Ste 240B, Las Vegas NV 89106',
+    'END:VCARD'
+  ].join('\r\n');
+  const blob = new Blob([vcard], {type:'text/vcard;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'PCSC_Clinic.vcf';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+}
+
+
+</script>
+</body>
+</html>
